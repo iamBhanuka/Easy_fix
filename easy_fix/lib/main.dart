@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:famguard/ui/signup.dart';
 void main(){
    runApp(MyApp());
    return;
@@ -27,17 +28,21 @@ class LoginPageState extends State<LoginPage>{
   TextStyle style = TextStyle(fontFamily: 'Montserrat',fontSize: 20.0);
   @override
   Widget build(BuildContext context){
-    final idField = TextField(
+    final idField = TextFormField(
+      keyboardType: TextInputType.text,
       obscureText: true,
       style: style,
       decoration: InputDecoration(
         contentPadding: EdgeInsets.fromLTRB(20.0,15.0,20.0,15.0),
         hintText: "ID",
+        
+
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))
       ),
     );
 
-    final passwordField = TextField(
+    final passwordField = TextFormField(
+      keyboardType: TextInputType.text,
       obscureText: true,
       style: style,
       decoration: InputDecoration(
@@ -54,8 +59,25 @@ class LoginPageState extends State<LoginPage>{
       child: MaterialButton(
         minWidth: MediaQuery.of(context).size.width,
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        onPressed: (){},
+        onPressed: (){
+          Navigator.of(context).pushNamed('/signup');
+        },
         child: Text("Login",
+        textAlign: TextAlign.center,
+        style: style.copyWith(color: Colors.white,fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
+
+      final signupButon =Material(
+      elevation: 5.0,
+      borderRadius: BorderRadius.circular(30.0),
+      color: Color(0xff01A0C7),
+      child: MaterialButton(
+        minWidth: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+        onPressed: (){},
+        child: Text("Signup",
         textAlign: TextAlign.center,
         style: style.copyWith(color: Colors.white,fontWeight: FontWeight.bold),
         ),
@@ -87,6 +109,8 @@ class LoginPageState extends State<LoginPage>{
                   SizedBox(height: 35.0),
                   loginButon,
                   SizedBox(height: 15.0,),
+                  signupButon,
+                  SizedBox(height: 05.0,)
 
                 ],
               ),
