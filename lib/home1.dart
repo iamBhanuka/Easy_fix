@@ -13,6 +13,8 @@ import 'package:location/location.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:easy_fix/bottomsheet.dart';
+import 'package:image_picker/image_picker.dart';
+
 
 class HomePage extends StatefulWidget {
   String phoneNumber;
@@ -48,6 +50,14 @@ class _HomePageState extends State<HomePage> {
 
   initState() {
     super.initState();
+    if(widget.phoneNumber == null){
+      UserProvider.getPhoneNumber().then((number){
+        setState((){
+          widget.phoneNumber= number;
+        });
+      });
+    }
+  
     initLocation();
     addMarkers();
   }
@@ -126,6 +136,7 @@ class _HomePageState extends State<HomePage> {
   GlobalKey<ScaffoldState> _sacaffoldkey = new GlobalKey();
   @override
   Widget build(BuildContext context) {
+    print(widget.phoneNumber);
     return new Scaffold(
       key: _sacaffoldkey,
       appBar: new AppBar(
@@ -167,27 +178,62 @@ class _HomePageState extends State<HomePage> {
                       colors: <Color>[Colors.blue, Colors.lightBlueAccent]),
                 ),
                 child: Container(
-                  child: Column(
-                    children: <Widget>[
-                      ClipOval(
-                          child: Image.asset(
-                        'assets/Bhanu.JPG',
-                        width: 100,
-                        height: 100,
-                      )),
-                      Text(
-                        'Bhanuka',
-                        style: TextStyle(color: Colors.white, fontSize: 25.0),
-                      )
-                    ],
-                  ),
+                  child: StreamBuilder(
+                    stream: Firestore.instance.collection("Customers").document(widget.phoneNumber).snapshots(),
+                    builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                      if (snapshot.hasData && snapshot.data != null) {
+                        DocumentSnapshot doc =  snapshot.data;
+                        print(doc.data);
+                        return Column(
+                          children: <Widget>[
+                            ClipOval(
+                                child: doc.data["Photo"] == null ?
+                                  ClipOval(
+                                child: Image.asset(
+                              'assets/aaa.png',
+                              width: 100,
+                              height: 100,
+                            )):            
+                             Image.network(
+                              doc.data["Photo"],
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.cover,
+                            )),
+                            
+                            Text(
+                              doc.data["First Name"],
+                              style: TextStyle(color: Colors.white, fontSize: 25.0),
+                            )
+                          ],
+                        );
+                      } else {
+                        return Column(
+                          children: <Widget>[
+                            ClipOval(
+                                child: Image.asset(
+                              'assets/aaa.png',
+                              width: 100,
+                              height: 100,
+                            )),
+                            
+                            Text(
+                              'Bhanuka',
+                              style: TextStyle(color: Colors.white, fontSize: 25.0),
+                            )
+                          ],
+                        );
+                      }
+                    },
+                  )
                 )),
             CoustomListTile(Icons.person, "Profile", () {
               Navigator.pop(context);
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (BuildContext context) => YourProfilePage()));
+                    
+                      builder: (BuildContext context) => YourProfilePage(phoneNumber: widget.phoneNumber)));
             }),
             CoustomListTile(Icons.play_for_work, "Your Works", () {
               Navigator.pop(context);

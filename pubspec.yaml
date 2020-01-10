@@ -30,6 +30,9 @@ dependencies:
   shared_preferences:
   firebase_auth: ^0.15.0+1
   rflutter_alert: ^1.0.3
+  firebase_storage:
+  font_awesome_flutter:
+  image_picker:
 
 dev_dependencies:
   flutter_test:
@@ -53,6 +56,7 @@ flutter:
     - assets/Bhanu.JPG
     - assets/customer.png
     - assets/mechanic.png
+    - assets/aaa.png
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

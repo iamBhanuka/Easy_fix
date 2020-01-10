@@ -46,26 +46,35 @@ class _BottomsheetPageState extends State<BottomsheetPage>
         var data = snapshot.data;
         return 
             Container(color: Colors.white70,
+            
             child: Padding(
               padding: const EdgeInsets.all(36.0),
+
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
+            
+              
                 children: <Widget>[
                   Text(data['name'],
+                  
                   style: TextStyle(fontSize: 20.0),),
+                  SizedBox(height: 15,),
                   Text(data['mechanic_name'],
                   style: TextStyle(fontSize: 20.0),),
+                  SizedBox(height: 15,),
                   Text(data['specification'],
                   style: TextStyle(fontSize: 20.0),),
-                  
-                  SizedBox(height: 0.8),
+                  SizedBox(height: 15,),
+                  SizedBox(height: 15),
                   requestButon,
                   
                 ],
                 
                 
+                
               ),
+              
             ),);
                         
       });

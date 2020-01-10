@@ -19,8 +19,8 @@ class LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final idField = TextFormField(
-      keyboardType: TextInputType.text,
+    final phoneField = TextFormField(
+      keyboardType: TextInputType.number,
       obscureText: false,
       style: style,
       controller: _editingController1,
@@ -73,7 +73,7 @@ class LoginPageState extends State<LoginPage> {
               return;
             } else {
               Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => HomePage()));
+                  context, MaterialPageRoute(builder: (context) => HomePage(phoneNumber: _editingController1.text,)));
             }
           } else {
             Alert(
@@ -135,7 +135,7 @@ class LoginPageState extends State<LoginPage> {
                   fit: BoxFit.contain,
                 ),
                 SizedBox(height: 45.0),
-                idField,
+                phoneField,
                 SizedBox(height: 25.0),
                 passwordField,
                 SizedBox(height: 35.0),

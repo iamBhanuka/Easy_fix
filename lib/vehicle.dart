@@ -60,7 +60,7 @@ class _VehiclePageState extends State<VehiclePage>{
             });
             print("complite");
             Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) =>HomePage()));
+              context, MaterialPageRoute(builder: (context) =>HomePage(phoneNumber: widget.phoneNumber,)));
           }).catchError((err){
             setState(() {
               _isSigningIn = false;
