@@ -26,7 +26,7 @@ class LoginPageState extends State<LoginPage> {
       controller: _editingController1,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hintText: "ID",
+          hintText: "Mobile Number",
           border:
               OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
@@ -55,7 +55,7 @@ class LoginPageState extends State<LoginPage> {
             _isSigningIn = true;
           });
           var userDoc = await Firestore.instance
-              .collection("users")
+              .collection("Customers")
               .document(_editingController1.text)
               .get();
 
@@ -105,25 +105,11 @@ class LoginPageState extends State<LoginPage> {
         minWidth: MediaQuery.of(context).size.width,
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () {
-          setState(() {
-            _isSigningIn = true;
-          });
-          Firestore.instance
-              .collection("users")
-              .document(widget.phoneNumber)
-              .setData({}).then((_) {
-            setState(() {
-              _isSigningIn = false;
-            });
-            print("complite");
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => FirstlogPage()));
-          }).catchError((err) {
-            setState(() {
-              _isSigningIn = false;
-            });
-            print(err);
-          });
+          Navigator.pop(context);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => FirstlogPage()));
         },
         child: Text(
           "Register",
@@ -137,15 +123,13 @@ class LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: Center(
         child: Container(
+          margin: EdgeInsets.fromLTRB(30, 100, 30, 10),
           color: Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.all(36.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
+          child: ListView(
+            children: <Widget>[
+             Column(
               children: <Widget>[
                 _isSigningIn ? LinearProgressIndicator() : SizedBox.shrink(),
-                Spacer(),
                 Image.asset(
                   "assets/logo.jpg",
                   fit: BoxFit.contain,
@@ -158,9 +142,9 @@ class LoginPageState extends State<LoginPage> {
                 loginButon,
                 SizedBox(height: 35.0),
                 registerButon,
-                Spacer()
               ],
             ),
+            ]
           ),
         ),
       ),

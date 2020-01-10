@@ -146,6 +146,13 @@ class _HomePageState extends State<HomePage> {
       body: GoogleMap(
         mapType: MapType.normal,
         initialCameraPosition: _kGooglePlex,
+         compassEnabled: true,
+         mapToolbarEnabled: true,
+         myLocationEnabled: true,
+         myLocationButtonEnabled: true,
+         rotateGesturesEnabled: true,
+         trafficEnabled: true,
+         
         onMapCreated: (GoogleMapController controller) {
           _controller = controller;
         },

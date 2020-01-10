@@ -5,7 +5,7 @@ import 'package:easy_fix/signup_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-
+import 'package:easy_fix/logfirst.dart';
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
 //  import 'package:famguard/ui/signup.dart';
@@ -92,7 +92,7 @@ class _FirstlogPageState extends State<FirstlogPage> {
             return;
           }
           var userDoc = await Firestore.instance
-              .collection("users")
+              .collection("Customers")
               .document(_editingController.text)
               .get();
 
@@ -110,7 +110,7 @@ class _FirstlogPageState extends State<FirstlogPage> {
           }
 
           Firestore.instance
-              .collection("users")
+              .collection("Customers")
               .document(_editingController.text)
               .setData({"keyphone": _editingController.text}).then((_) {
             setState(() {
@@ -160,6 +160,15 @@ class _FirstlogPageState extends State<FirstlogPage> {
                   height: 40.0,
                 ),
                 next,
+                SizedBox(height: 30,),
+                InkWell(child: Text("If you have a account click hear....!!",textAlign: TextAlign.center,style: TextStyle(fontSize: 22,color: Colors.blue),),onTap: () {
+                 Navigator.pop(context);
+                 Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => LoginPage()));
+                },),
+                
                 Spacer()
               ],
             ),

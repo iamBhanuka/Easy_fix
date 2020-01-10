@@ -12,6 +12,7 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 20.0);
+  var _formKey = GlobalKey<FormState>();
 
   TextEditingController _editingController1 = TextEditingController();
   TextEditingController _editingController2 = TextEditingController();
@@ -24,9 +25,16 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
-    final fname = TextField(
+    final fname = TextFormField(
       keyboardType: TextInputType.text,
       style: style,
+      validator: (value) {
+        if (value.isEmpty) {
+          return "First Name Can't be Empty";
+        }
+                return null;
+
+      },
       controller: _editingController1,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
@@ -35,10 +43,17 @@ class _SignupPageState extends State<SignupPage> {
               OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
 
-    final lName = TextField(
+    final lName = TextFormField(
       keyboardType: TextInputType.text,
       obscureText: false,
       style: style,
+      validator: (value) {
+        if (value.isEmpty) {
+          return "Last Name Can't be Empty";
+        }
+                return null;
+
+      },
       controller: _editingController2,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
@@ -47,10 +62,17 @@ class _SignupPageState extends State<SignupPage> {
               OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
 
-    final idField = TextField(
+    final idField = TextFormField(
       keyboardType: TextInputType.text,
       obscureText: false,
       style: style,
+      validator: (value) {
+        if (value.isEmpty) {
+          return "ID Can't be Empty";
+        }
+                return null;
+
+      },
       controller: _editingController3,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
@@ -59,7 +81,7 @@ class _SignupPageState extends State<SignupPage> {
               OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
 
-    final email = TextField(
+    final email = TextFormField(
       keyboardType: TextInputType.emailAddress,
       obscureText: false,
       style: style,
@@ -71,10 +93,17 @@ class _SignupPageState extends State<SignupPage> {
               OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
 
-    final passwordField = TextField(
+    final passwordField = TextFormField(
       keyboardType: TextInputType.text,
       obscureText: true,
       style: style,
+      validator: (value) {
+        if (value.isEmpty) {
+          return "Password Can't be Empty";
+        }
+                return null;
+
+      },
       controller: _editingController5,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
@@ -82,10 +111,17 @@ class _SignupPageState extends State<SignupPage> {
           border:
               OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
-    final confermpasswordField = TextField(
+    final confermpasswordField = TextFormField(
       keyboardType: TextInputType.text,
       obscureText: true,
       style: style,
+      validator: (value) {
+        if (value.isEmpty) {
+          return "You should Conferm Password";
+        }
+                return null;
+
+      },
       controller: _editingController6,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
@@ -106,46 +142,53 @@ class _SignupPageState extends State<SignupPage> {
             _isSigningIn = true;
           });
 
-          if (_editingController5.text != _editingController6.text) {
-            Alert(
-              context: context,
-              title: "Password is not match",
-              desc: "A user already exist for this phone number!",
-              type: AlertType.error,
-            ).show();
+          if (_formKey.currentState.validate()) {
+            if (_editingController5.text != _editingController6.text) {
+              Alert(
+                context: context,
+                title: "Password is not match",
+                desc: "Check your Password!",
+                type: AlertType.error,
+              ).show();
+              setState(() {
+                _isSigningIn = false;
+              });
+              return;
+            }
+
+            Firestore.instance
+                .collection("Customers")
+                .document(widget.phoneNumber)
+                .setData({
+              "First Name": _editingController1.text,
+              "Last Name": _editingController2.text,
+              "id": _editingController3.text,
+              "Email": _editingController4.text,
+              "pass": _editingController5.text,
+              "conpass": _editingController6.text,
+              "Type": "Customer"
+            }).then((_) {
+              setState(() {
+                _isSigningIn = false;
+              });
+
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          VehiclePage(phoneNumber: widget.phoneNumber)));
+            }).catchError((err) {
+              setState(() {
+                _isSigningIn = false;
+              });
+              print(err);
+            });
+          
+          } else {
             setState(() {
               _isSigningIn = false;
             });
-            return;
           }
-
-          Firestore.instance
-              .collection("users")
-              .document(widget.phoneNumber)
-              .setData({
-            "First Name": _editingController1.text,
-            "Last Name": _editingController2.text,
-            "id": _editingController3.text,
-            "Email": _editingController4.text,
-            "pass": _editingController5.text,
-            "conpass": _editingController6.text,
-            "Type": "Customer"
-          }).then((_) {
-            setState(() {
-              _isSigningIn = false;
-            });
-
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        VehiclePage(phoneNumber: widget.phoneNumber)));
-          }).catchError((err) {
-            setState(() {
-              _isSigningIn = false;
-            });
-            print(err);
-          });
         },
         child: Text(
           "Next",
@@ -159,41 +202,47 @@ class _SignupPageState extends State<SignupPage> {
     return new Scaffold(
       body: Center(
         child: Container(
+          margin: EdgeInsets.all(28.0),
           color: Colors.white,
+          child:Form(
+            key: _formKey,
           child: ListView(
-            // crossAxisAlignment: CrossAxisAlignment.center,
-            // mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              _isSigningIn ? LinearProgressIndicator() : SizedBox.shrink(),
-              Image.asset(
-                "assets/logo.jpg",
-                fit: BoxFit.contain,
+              Column(
+                children: <Widget>[
+                  _isSigningIn ? LinearProgressIndicator() : SizedBox.shrink(),
+                  Image.asset(
+                    "assets/logo.jpg",
+                    fit: BoxFit.contain,
+                  ),
+                  SizedBox(height: 15.0),
+                  fname,
+                  SizedBox(
+                    height: 15.0,
+                  ),
+                  lName,
+                  SizedBox(
+                    height: 15.0,
+                  ),
+                  idField,
+                  SizedBox(height: 15.0),
+                  email,
+                  SizedBox(
+                    height: 15.0,
+                  ),
+                  passwordField,
+                  SizedBox(height: 15.0),
+                  confermpasswordField,
+                  SizedBox(
+                    height: 15.0,
+                  ),
+                  nextButon,
+                ],
               ),
-              SizedBox(height: 8.0),
-              fname,
-              SizedBox(
-                height: 10.0,
-              ),
-              lName,
-              SizedBox(
-                height: 10.0,
-              ),
-              idField,
-              SizedBox(height: 8.0),
-              email,
-              SizedBox(
-                height: 10.0,
-              ),
-              passwordField,
-              SizedBox(height: 8.0),
-              confermpasswordField,
-              SizedBox(
-                height: 10.0,
-              ),
-              nextButon,
             ],
           ),
         ),
+      ),
       ),
     );
   }

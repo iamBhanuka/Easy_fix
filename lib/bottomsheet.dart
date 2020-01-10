@@ -24,22 +24,11 @@ class _BottomsheetPageState extends State<BottomsheetPage>
         minWidth: MediaQuery.of(context).size.width,
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
      onPressed: () {
-          setState(() {
-
-          });
-          Firestore.instance.collection("users").document(widget.documentID).setData({
-            
-          }).then((_){
-            setState(() {
-            });
-            print("complite");
-            Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) =>RequestPage()));
-          }).catchError((err){
-            setState(() {
-            });
-            print(err);
-          });
+            Navigator.pop(context);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => RequestPage()));
 
         },
         child: Text(

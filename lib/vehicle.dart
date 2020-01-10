@@ -53,7 +53,7 @@ class _VehiclePageState extends State<VehiclePage>{
           
           print(data);
           print(widget.phoneNumber);
-          Firestore.instance.collection("users").document(widget.phoneNumber).updateData(data).then((uhu){
+          Firestore.instance.collection("Customers").document(widget.phoneNumber).updateData(data).then((uhu){
     
             setState(() {
               _isSigningIn = false;
@@ -89,37 +89,38 @@ class _VehiclePageState extends State<VehiclePage>{
           child: Container(
             color: Colors.white,
             child: Padding(
-              padding: const EdgeInsets.all(36.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
+              padding: const EdgeInsets.fromLTRB(50, 100, 50, 50),
+              child: ListView(
+               
                 children: <Widget>[
                   _isSigningIn ? LinearProgressIndicator() : SizedBox.shrink(),
-                  Spacer(),
                   Image.asset(
                       "assets/logo.jpg",
                       fit: BoxFit.contain,
                       
                     ),
-                  SizedBox(height: 100.0),
+                  SizedBox(height: 50.0),
                   new Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                   
-                      new Text("hybrid Vehicle",
+                      new Text("Hybrid Vehicle",
+                      style: TextStyle(fontSize: 30.0),
                       textAlign: TextAlign.center),
                       new Checkbox(value: _isChecked1, activeColor: Colors.red, onChanged: (bool value){onChanged1(value);},),
                     ],
                   ),
                   new Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      new Text("Normal Vehicle"),
-                      new Checkbox(value: _isChecked2, activeColor: Colors.red, onChanged: (bool value){onChanged2(value);},),
+                     new Text("Normal Vehicle",
+                     style: TextStyle(fontSize: 28.0),
+                     textAlign: TextAlign.center,),
+                     new Checkbox(value: _isChecked2, activeColor: Colors.red, onChanged: (bool value){onChanged2(value);},),
                     ],
                   ),
-                  SizedBox(height: 100.0,),
-                  nextButon,
-                  Spacer()
-                  
+                  SizedBox(height: 50.0,),
+                  nextButon                  
                 ],
               ),
             ),
