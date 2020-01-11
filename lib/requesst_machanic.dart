@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_fix/home1.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_fix/mechanicDetails.dart';
 
 class RequestPage extends StatefulWidget {
-  String phoneNumber;
-  RequestPage({this.phoneNumber});
+  String documentID;
+  RequestPage({this.documentID});
   @override
   _RequestPageState createState() => _RequestPageState();
 }
@@ -50,7 +51,7 @@ class _RequestPageState extends State<RequestPage> {
       style: style,
       validator: (value) {
         if (value.isEmpty) {
-          return "fuck you";
+          return "Trouble";
         }
       },
       controller: _editingController2,
@@ -76,7 +77,7 @@ class _RequestPageState extends State<RequestPage> {
           if (_formKey.currentState.validate()) {
             Firestore.instance
                 .collection("request")
-                .document(widget.phoneNumber)
+                .document(widget.documentID)
                 .setData({
               "Vehicle Type": dropdownValue,
               "Phone": _editingController1.text,
@@ -90,7 +91,7 @@ class _RequestPageState extends State<RequestPage> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          HomePage(phoneNumber: widget.phoneNumber)));
+                          MechanicDetailsPage(documentID: widget.documentID)));
             }).catchError((err) {
               setState(() {
                 _isSigningIn = false;
@@ -111,7 +112,7 @@ class _RequestPageState extends State<RequestPage> {
         ),
       ),
     );
-
+    print(widget.documentID);
     return new Scaffold(
       body: Center(
         child: Container(
@@ -131,11 +132,6 @@ class _RequestPageState extends State<RequestPage> {
                   ),
                   SizedBox(height: 8.0),
                   vehicleType,
-                  new TextFormField(
-                      decoration: new InputDecoration(
-                          labelText: "current phone number"),
-                      validator: (value) =>
-                          value.isEmpty ? 'Phone number can\t be empty' : null),
                   SizedBox(
                     height: 10.0,
                   ),

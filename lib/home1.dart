@@ -36,10 +36,10 @@ class _HomePageState extends State<HomePage> {
     final query = inputaddr;
     var addresses = await Geocoder.local.findAddressesFromQuery(query);
     var first = addresses.first;
-    Firestore.instance.collection('markers').add({
-      'coords':
+    Firestore.instance.collection('mechanic').add({
+      'coods':
           new GeoPoint(first.coordinates.latitude, first.coordinates.longitude),
-      'place': first.featureName
+      'address': first.featureName
     });
   }
 
@@ -103,7 +103,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void addMarkers() {
-    Firestore.instance.collection('markers').getDocuments().then((snapshots) {
+    Firestore.instance.collection('mechanic').getDocuments().then((snapshots) {
       var machanicLocationIcon = snapshots.documents
           .toList()
           .map((DocumentSnapshot documentSnapshot) async => Marker(
@@ -112,14 +112,14 @@ class _HomePageState extends State<HomePage> {
                   "assets/mechanic.png"),
               markerId: MarkerId(documentSnapshot.documentID),
               position: LatLng(
-                  (documentSnapshot.data['coords'] as GeoPoint).latitude,
-                  (documentSnapshot.data['coords'] as GeoPoint).longitude),
+                  (documentSnapshot.data['coods'] as GeoPoint).latitude,
+                  (documentSnapshot.data['coods'] as GeoPoint).longitude),
               onTap: () {
                 showModalBottomSheet(
                   context: context,
                   builder: (builder) {
                     return BottomsheetPage(
-                        documentID: documentSnapshot.documentID);
+                        documentID: documentSnapshot.documentID,);
                   },
                 );
               }))

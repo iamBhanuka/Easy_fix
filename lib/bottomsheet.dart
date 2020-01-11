@@ -5,8 +5,12 @@ import 'package:easy_fix/requesst_machanic.dart';
 
 class BottomsheetPage extends StatefulWidget{  
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 20.0);
-  String documentID ;
-  BottomsheetPage({this.documentID});
+
+  String documentID;
+  // BottomsheetPage({this.phoneNumber, String documentID});
+    BottomsheetPage({this.documentID, String phoneNumber});
+  
+  
   bool _isSigningIn = false;
   @override
   _BottomsheetPageState createState() => _BottomsheetPageState();
@@ -28,7 +32,7 @@ class _BottomsheetPageState extends State<BottomsheetPage>
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (BuildContext context) => RequestPage()));
+                      builder: (BuildContext context) => RequestPage(documentID: widget.documentID,)));
 
         },
         child: Text(
@@ -37,9 +41,9 @@ class _BottomsheetPageState extends State<BottomsheetPage>
                   ),
       ),
     );
-
+     print(widget.documentID);
     return StreamBuilder<DocumentSnapshot>(
-      stream: Firestore.instance.collection('markers').document(widget.documentID).snapshots(),
+      stream: Firestore.instance.collection('mechanic').document(widget.documentID).snapshots(),
       builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) 
       {
         if (!snapshot.hasData) return const Text('Loading...');
@@ -56,9 +60,6 @@ class _BottomsheetPageState extends State<BottomsheetPage>
             
               
                 children: <Widget>[
-                  Text(data['name'],
-                  
-                  style: TextStyle(fontSize: 20.0),),
                   SizedBox(height: 15,),
                   Text(data['mechanic_name'],
                   style: TextStyle(fontSize: 20.0),),
