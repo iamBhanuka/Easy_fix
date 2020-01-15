@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 // import 'package:stripe_payment/stripe_payment.dart';
 
 class PaymentPage extends StatefulWidget {
+  String documentID;
+  PaymentPage({this.documentID});
   @override
   _PaymentPageState createState() => _PaymentPageState();
 }

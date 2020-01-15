@@ -36,6 +36,7 @@ dependencies:
   url_launcher: ^5.4.1
   # stripe_payment: ^1.0.6
   flutter_rating_bar: ^3.0.1+1
+  logger: ^0.8.3
 
 
 dev_dependencies:

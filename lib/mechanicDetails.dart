@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_fix/map.dart';
 import 'package:easy_fix/rating.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -178,6 +179,12 @@ class _MechanicDetailsPageState extends State<MechanicDetailsPage> {
                                 color: Color(0xff476cfb),
                                 onPressed: () {
                                   Navigator.of(context).pop();
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                              MapPage(documentID: widget.documentID)));
+
                                 },
                                 elevation: 4.0,
                                 splashColor: Colors.blueGrey,
@@ -195,7 +202,7 @@ class _MechanicDetailsPageState extends State<MechanicDetailsPage> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (BuildContext context) =>
-                                              PaymentPage()));
+                                              PaymentPage(documentID: widget.documentID)));
                                 },
                                 elevation: 4.0,
                                 splashColor: Colors.blueGrey,

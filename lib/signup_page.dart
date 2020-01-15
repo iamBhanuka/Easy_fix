@@ -150,42 +150,46 @@ class _SignupPageState extends State<SignupPage> {
               });
               return;
             }
-            if (!(_editingController3.text.length == 10 &&
-                _isNumeric(_editingController3.text.substring(0, 9)) &&
-                _editingController3.text
-                    .toString()
-                    .toLowerCase()
-                    .endsWith("v"))) {
-              Alert(
-                context: context,
-                title: "ID not valied.....!!",
-                desc:
-                    "This is not a valied National ID card please correct it !!",
-                type: AlertType.error,
-              ).show();
-              setState(() {
-                _isSigningIn = false;
+            if ((_editingController3.text.length == 10 &&
+                    _isNumeric(_editingController3.text.substring(0, 9)) &&
+                    _editingController3.text
+                        .toString()
+                        .toLowerCase()
+                        .endsWith("v")) ||
+                (_editingController3.text.length == 12 &&
+                    _isNumeric(_editingController3.text.substring(0, 9)))) {
+              Firestore.instance
+                  .collection("Customers")
+                  .document(widget.phoneNumber)
+                  .setData({
+                "First Name": _editingController1.text,
+                "Last Name": _editingController2.text,
+                "id": _editingController3.text,
+                "Email": _editingController4.text,
+                "pass": _editingController5.text,
+                "conpass": _editingController6.text,
+                "Type": "Customer"
+              }).then((_) {
+                setState(() {
+                  _isSigningIn = false;
+                });
+
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            VehiclePage(phoneNumber: widget.phoneNumber)));
+              }).catchError((err) {
+                setState(() {
+                  _isSigningIn = false;
+                });
+                print(err);
               });
-              return;
-            } else if (!(_editingController3.text.length == 12 &&
-                _isNumeric(_editingController3.text.substring(0, 9)))) {
-              Alert(
-                context: context,
-                title: "ID not valied.....!!",
-                desc:
-                    "This is not a valied National ID card please correct it !!",
-                type: AlertType.error,
-              ).show();
-              setState(() {
-                _isSigningIn = false;
-              });
-              return;
             } else {
               Alert(
                 context: context,
                 title: "ID Length is invalied",
-                desc:
-                    "Check your ID card numbers !!",
+                desc: "Check your ID card numbers !!",
                 type: AlertType.error,
               ).show();
               setState(() {
@@ -193,34 +197,6 @@ class _SignupPageState extends State<SignupPage> {
               });
               return;
             }
-
-            Firestore.instance
-                .collection("Customers")
-                .document(widget.phoneNumber)
-                .setData({
-              "First Name": _editingController1.text,
-              "Last Name": _editingController2.text,
-              "id": _editingController3.text,
-              "Email": _editingController4.text,
-              "pass": _editingController5.text,
-              "conpass": _editingController6.text,
-              "Type": "Customer"
-            }).then((_) {
-              setState(() {
-                _isSigningIn = false;
-              });
-
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          VehiclePage(phoneNumber: widget.phoneNumber)));
-            }).catchError((err) {
-              setState(() {
-                _isSigningIn = false;
-              });
-              print(err);
-            });
           } else {
             setState(() {
               _isSigningIn = false;
