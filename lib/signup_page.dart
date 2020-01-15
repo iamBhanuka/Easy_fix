@@ -32,8 +32,7 @@ class _SignupPageState extends State<SignupPage> {
         if (value.isEmpty) {
           return "First Name Can't be Empty";
         }
-                return null;
-
+        return null;
       },
       controller: _editingController1,
       decoration: InputDecoration(
@@ -51,8 +50,7 @@ class _SignupPageState extends State<SignupPage> {
         if (value.isEmpty) {
           return "Last Name Can't be Empty";
         }
-                return null;
-
+        return null;
       },
       controller: _editingController2,
       decoration: InputDecoration(
@@ -70,8 +68,7 @@ class _SignupPageState extends State<SignupPage> {
         if (value.isEmpty) {
           return "ID Can't be Empty";
         }
-                return null;
-
+        return null;
       },
       controller: _editingController3,
       decoration: InputDecoration(
@@ -101,8 +98,7 @@ class _SignupPageState extends State<SignupPage> {
         if (value.isEmpty) {
           return "Password Can't be Empty";
         }
-                return null;
-
+        return null;
       },
       controller: _editingController5,
       decoration: InputDecoration(
@@ -119,8 +115,7 @@ class _SignupPageState extends State<SignupPage> {
         if (value.isEmpty) {
           return "You should Conferm Password";
         }
-                return null;
-
+        return null;
       },
       controller: _editingController6,
       decoration: InputDecoration(
@@ -148,6 +143,49 @@ class _SignupPageState extends State<SignupPage> {
                 context: context,
                 title: "Password is not match",
                 desc: "Check your Password!",
+                type: AlertType.error,
+              ).show();
+              setState(() {
+                _isSigningIn = false;
+              });
+              return;
+            }
+            if (!(_editingController3.text.length == 10 &&
+                _isNumeric(_editingController3.text.substring(0, 9)) &&
+                _editingController3.text
+                    .toString()
+                    .toLowerCase()
+                    .endsWith("v"))) {
+              Alert(
+                context: context,
+                title: "ID not valied.....!!",
+                desc:
+                    "This is not a valied National ID card please correct it !!",
+                type: AlertType.error,
+              ).show();
+              setState(() {
+                _isSigningIn = false;
+              });
+              return;
+            } else if (!(_editingController3.text.length == 12 &&
+                _isNumeric(_editingController3.text.substring(0, 9)))) {
+              Alert(
+                context: context,
+                title: "ID not valied.....!!",
+                desc:
+                    "This is not a valied National ID card please correct it !!",
+                type: AlertType.error,
+              ).show();
+              setState(() {
+                _isSigningIn = false;
+              });
+              return;
+            } else {
+              Alert(
+                context: context,
+                title: "ID Length is invalied",
+                desc:
+                    "Check your ID card numbers !!",
                 type: AlertType.error,
               ).show();
               setState(() {
@@ -183,7 +221,6 @@ class _SignupPageState extends State<SignupPage> {
               });
               print(err);
             });
-          
           } else {
             setState(() {
               _isSigningIn = false;
@@ -204,46 +241,55 @@ class _SignupPageState extends State<SignupPage> {
         child: Container(
           margin: EdgeInsets.all(28.0),
           color: Colors.white,
-          child:Form(
+          child: Form(
             key: _formKey,
-          child: ListView(
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  _isSigningIn ? LinearProgressIndicator() : SizedBox.shrink(),
-                  Image.asset(
-                    "assets/logo.jpg",
-                    fit: BoxFit.contain,
-                  ),
-                  SizedBox(height: 15.0),
-                  fname,
-                  SizedBox(
-                    height: 15.0,
-                  ),
-                  lName,
-                  SizedBox(
-                    height: 15.0,
-                  ),
-                  idField,
-                  SizedBox(height: 15.0),
-                  email,
-                  SizedBox(
-                    height: 15.0,
-                  ),
-                  passwordField,
-                  SizedBox(height: 15.0),
-                  confermpasswordField,
-                  SizedBox(
-                    height: 15.0,
-                  ),
-                  nextButon,
-                ],
-              ),
-            ],
+            child: ListView(
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    _isSigningIn
+                        ? LinearProgressIndicator()
+                        : SizedBox.shrink(),
+                    Image.asset(
+                      "assets/logo.jpg",
+                      fit: BoxFit.contain,
+                    ),
+                    SizedBox(height: 15.0),
+                    fname,
+                    SizedBox(
+                      height: 15.0,
+                    ),
+                    lName,
+                    SizedBox(
+                      height: 15.0,
+                    ),
+                    idField,
+                    SizedBox(height: 15.0),
+                    email,
+                    SizedBox(
+                      height: 15.0,
+                    ),
+                    passwordField,
+                    SizedBox(height: 15.0),
+                    confermpasswordField,
+                    SizedBox(
+                      height: 15.0,
+                    ),
+                    nextButon,
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
-      ),
     );
+  }
+
+  bool _isNumeric(String str) {
+    if (str == null) {
+      return false;
+    }
+    return double.tryParse(str) != null;
   }
 }
