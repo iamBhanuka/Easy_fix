@@ -73,7 +73,7 @@ class _HomePageState extends State<HomePage> {
           final location = await _locationService.getLocation();
 
           final _currentCameraPosition = CameraPosition(
-              target: LatLng(location.latitude, location.longitude), zoom: 15);
+              target: LatLng(location.latitude, location.longitude), zoom: 13);
 
           _controller.animateCamera(
               CameraUpdate.newCameraPosition(_currentCameraPosition));

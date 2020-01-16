@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_fix/home1.dart';
 import 'package:easy_fix/map.dart';
 import 'package:easy_fix/rating.dart';
+import 'package:easy_fix/requesst_machanic.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:easy_fix/payment.dart';
@@ -23,10 +25,22 @@ class _MechanicDetailsPageState extends State<MechanicDetailsPage> {
           "Mechanic Profile",
           style: TextStyle(color: Colors.black),
         ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          color: Colors.black,
+          onPressed: () {
+            Navigator.of(context).pop();
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        RequestPage(documentID: widget.documentID)));
+          },
+        ),
       ),
       body: Builder(
         builder: (context) => Container(
-            padding: EdgeInsets.fromLTRB(20, 20, 0, 0),
+            margin: EdgeInsets.fromLTRB(20, 20, 0, 0),
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.start, children: <
                     Widget>[
@@ -64,12 +78,13 @@ class _MechanicDetailsPageState extends State<MechanicDetailsPage> {
                           Text(
                             doc.data["mechanic_name"],
                             style:
-                                TextStyle(color: Colors.black, fontSize: 35.0),
+                                TextStyle(color: Colors.black, fontSize: 25.0),
                           )
                         ],
                       );
                     } else {
-                      return Column(
+                      return ListView(
+                        
                         children: <Widget>[
                           ClipOval(
                               child: Image.asset(
@@ -108,13 +123,13 @@ class _MechanicDetailsPageState extends State<MechanicDetailsPage> {
                               Text(
                                 'Specification :-',
                                 style: TextStyle(
-                                    color: Colors.black, fontSize: 28.0),
+                                    color: Colors.black, fontSize: 25.0),
                               ),
                               Container(
                                 margin: EdgeInsets.only(left: 8.0),
                                 child: Text(
                                   data['specification'],
-                                  style: TextStyle(fontSize: 25.0),
+                                  style: TextStyle(fontSize: 20.0),
                                 ),
                               )
                             ],
@@ -130,14 +145,14 @@ class _MechanicDetailsPageState extends State<MechanicDetailsPage> {
                               Text(
                                 'Contact Number :-',
                                 style: TextStyle(
-                                    color: Colors.black, fontSize: 28.0),
+                                    color: Colors.black, fontSize: 25.0),
                               ),
                               Container(
                                 margin: EdgeInsets.only(left: 8.0),
                                 child: InkWell(
                                   child: Text(
                                     data['telephone'],
-                                    style: TextStyle(fontSize: 25.0),
+                                    style: TextStyle(fontSize: 20.0),
                                   ),
                                   onTap: () async {
                                     await launch('tel:${data['telephone']}');
@@ -155,13 +170,13 @@ class _MechanicDetailsPageState extends State<MechanicDetailsPage> {
                               Text(
                                 'Address :-',
                                 style: TextStyle(
-                                    color: Colors.black, fontSize: 22.0),
+                                    color: Colors.black, fontSize: 25.0),
                               ),
                               Container(
                                 margin: EdgeInsets.only(left: 8.0),
                                 child: Text(
                                   data['address'],
-                                  style: TextStyle(fontSize: 22.0),
+                                  style: TextStyle(fontSize: 20.0),
                                 ),
                               )
                             ],
@@ -189,7 +204,7 @@ class _MechanicDetailsPageState extends State<MechanicDetailsPage> {
                                 elevation: 4.0,
                                 splashColor: Colors.blueGrey,
                                 child: Text(
-                                  "Cancel",
+                                  "Map",
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 16.0),
                                 ),
@@ -215,7 +230,6 @@ class _MechanicDetailsPageState extends State<MechanicDetailsPage> {
                               RaisedButton(
                                 color: Color(0xff476cfb),
                                 onPressed: () {
-                                  Navigator.pop(context);
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(

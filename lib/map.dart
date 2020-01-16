@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:easy_fix/mechanicDetails.dart';
 import 'package:easy_fix/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -153,9 +154,8 @@ class _MapPageState extends State<MapPage> {
         .then((documentSnapshot) async {
       PointObject point = PointObject(
         child: Text(documentSnapshot.data['mechanic_name']),
-        location: LatLng(
-              (documentSnapshot.data['coods'] as GeoPoint).latitude,
-              (documentSnapshot.data['coods'] as GeoPoint).longitude),
+        location: LatLng((documentSnapshot.data['coods'] as GeoPoint).latitude,
+            (documentSnapshot.data['coods'] as GeoPoint).longitude),
       );
 
       Logger().i("Snapshot", documentSnapshot);
@@ -191,11 +191,17 @@ class _MapPageState extends State<MapPage> {
           style: TextStyle(color: Colors.orange),
         ),
         leading: IconButton(
-            icon: Icon(Icons.menu),
-            color: Colors.black,
-            onPressed: () {
-              _sacaffoldkey.currentState.openDrawer();
-            }),
+          icon: Icon(Icons.arrow_back_ios),
+          color: Colors.black,
+          onPressed: () {
+            Navigator.of(context).pop();
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        MechanicDetailsPage(documentID: widget.documentID)));
+          },
+        ),
       ),
       body: GoogleMap(
         mapType: MapType.normal,

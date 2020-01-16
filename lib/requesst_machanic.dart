@@ -14,8 +14,9 @@ class _RequestPageState extends State<RequestPage> {
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 20.0);
   var _formKey = GlobalKey<FormState>();
 
-  TextEditingController _editingController1 = TextEditingController();
-  TextEditingController _editingController2 = TextEditingController();
+  TextEditingController _trouble = TextEditingController();
+  TextEditingController _currentPhone = TextEditingController();
+  TextEditingController _vehicleNumber = TextEditingController();
 
   String dropdownValue = 'Car';
   bool _isSigningIn = false;
@@ -25,12 +26,13 @@ class _RequestPageState extends State<RequestPage> {
     final vehicleType = DropdownButton<String>(
         value: dropdownValue,
         icon: Icon(Icons.arrow_downward),
-        iconSize: 24,
+        iconSize: 35,
         elevation: 16,
         style: TextStyle(color: Colors.deepPurple),
+        isExpanded: true,
         underline: Container(
-          height: 2,
-          color: Colors.deepPurpleAccent,
+          height: 0,
+          color: Colors.white,
         ),
         onChanged: (String newValue) {
           setState(() {
@@ -40,8 +42,13 @@ class _RequestPageState extends State<RequestPage> {
         items: ["Car", "Van", "Bus", "Lorry", "Motor Bicycle"]
             .map(
               (value) => DropdownMenuItem(
-                child: Text(value),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(value,
+                  style: TextStyle(fontSize: 25),),
+                ),
                 value: value,
+                
               ),
             )
             .toList());
@@ -51,13 +58,45 @@ class _RequestPageState extends State<RequestPage> {
       style: style,
       validator: (value) {
         if (value.isEmpty) {
-          return "Trouble";
+          return "Enter Trouble";
         }
       },
-      controller: _editingController2,
+      controller: _trouble,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hintText: "ID",
+          hintText: "Trouble",
+          border:
+              OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+    );
+
+    final vehiclenumber = TextFormField(
+      keyboardType: TextInputType.text,
+      style: style,
+      validator: (value) {
+        if (value.isEmpty) {
+          return "Enter Vehicle Number";
+        }
+      },
+      controller: _vehicleNumber,
+      decoration: InputDecoration(
+          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+          hintText: "Vehicle Number  EX:- PW-2635",
+          border:
+              OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+    );
+
+    final cNumber = TextFormField(
+      keyboardType: TextInputType.text,
+      style: style,
+      validator: (value) {
+        if (value.isEmpty) {
+          return "Please Enter Current phone number";
+        }
+      },
+      controller: _currentPhone,
+      decoration: InputDecoration(
+          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+          hintText: "Current phone number",
           border:
               OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
@@ -79,9 +118,10 @@ class _RequestPageState extends State<RequestPage> {
                 .collection("request")
                 .document(widget.documentID)
                 .setData({
-              "Vehicle Type": dropdownValue,
-              "Phone": _editingController1.text,
-              "Trouble": _editingController2.text,
+              "Vehicle_Type": dropdownValue,
+              "Current_Phone": _currentPhone.text,
+              "Trouble": _trouble.text,
+              "vehicle_Number": _vehicleNumber
             }).then((_) {
               setState(() {
                 _isSigningIn = false;
@@ -112,6 +152,29 @@ class _RequestPageState extends State<RequestPage> {
         ),
       ),
     );
+
+    final canselButon = Material(
+      elevation: 5.0,
+      borderRadius: BorderRadius.circular(30.0),
+      color: Color(0xff01A0C7),
+      child: MaterialButton(
+        minWidth: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+        onPressed: () {
+          Navigator.pop(context);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => HomePage()));
+        },
+        child: Text(
+          "Cansel",
+          textAlign: TextAlign.center,
+          style:
+              style.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
     print(widget.documentID);
     return new Scaffold(
       body: Center(
@@ -121,26 +184,34 @@ class _RequestPageState extends State<RequestPage> {
             padding: const EdgeInsets.all(36.0),
             child: Form(
               key: _formKey,
-              child: ListView(
-                // crossAxisAlignment: CrossAxisAlignment.center,
-                // mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  _isSigningIn ? LinearProgressIndicator() : SizedBox.shrink(),
-                  Image.asset(
-                    "assets/logo.jpg",
-                    fit: BoxFit.contain,
-                  ),
-                  SizedBox(height: 8.0),
-                  vehicleType,
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                  trouble,
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                  request,
-                ],
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  
+                  children: <Widget>[
+                    _isSigningIn ? LinearProgressIndicator() : SizedBox.shrink(),
+                    Image.asset(
+                      "assets/logo.jpg",
+                      fit: BoxFit.contain,
+                    ),
+                    SizedBox(height: 8.0),
+                    vehicleType,
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    trouble,
+                    SizedBox(height: 10.0,),
+                    cNumber,
+                    SizedBox(height: 10.0,),
+                    vehiclenumber,
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    request,
+                    SizedBox(height: 20.00,),
+                    canselButon,
+                  ],
+                ),
               ),
             ),
           ),

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_fix/home1.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class RatePage extends StatefulWidget {
   String documentID;
@@ -13,7 +14,7 @@ class RatePage extends StatefulWidget {
 class _RatePageState extends State<RatePage> {
   var _ratingController = TextEditingController();
   double _rating;
- 
+
   int _ratingBarMode = 1;
 
   bool _isVertical = false;
@@ -30,9 +31,7 @@ class _RatePageState extends State<RatePage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Rating Mechanic'
-        ),
-      
+        title: Text('Rating Mechanic'),
       ),
       body: Container(
         margin: EdgeInsets.only(top: 20.0),
@@ -131,20 +130,43 @@ class _RatePageState extends State<RatePage> {
                           children: <Widget>[
                             RaisedButton(
                               color: Color(0xff476cfb),
-                              onPressed: (){
-                                Navigator.of(context).pop();
-                                Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                              HomePage()));
+                              onPressed: () {
+                                Alert(
+                                  context: context,
+                                  type: AlertType.success,
+                                  title: "Thank You",
+                                  desc:
+                                      "Thaks for being with us.....!!",
+                                   buttons: [
+                                     DialogButton(
+                                       child: Text(
+                                         "Thank You",
+                                         style: TextStyle(
+                                            color: Colors.white, fontSize: 20),
+                                       ),
+                                      onPressed: (){
+                                      Navigator.of(context).pop();
+                                      Navigator.push(
+                                     context,
+                                     MaterialPageRoute(
+                                         builder: (BuildContext context) =>
+                                             HomePage()));
+                                },
+                                       color: Color.fromRGBO(0, 179, 134, 1.0),
+                                       radius: BorderRadius.circular(0.0),
+                                      
+                                     ),
+                                   ],
+                                ).show();
+                                setState(() {});
+                                
                               },
                               elevation: 4.0,
                               splashColor: Colors.blueGrey,
-                              child: Text("Rate",
-                              style: TextStyle(
-                                  color: Colors.white,fontSize: 16.0
-                              ),
+                              child: Text(
+                                "Rate",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16.0),
                               ),
                             )
                           ],
@@ -203,4 +225,3 @@ class _RatePageState extends State<RatePage> {
         ],
       );
 }
-
