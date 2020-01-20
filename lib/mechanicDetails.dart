@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:easy_fix/home1.dart';
+import 'package:easy_fix/cansel_mechanic.dart';
 import 'package:easy_fix/map.dart';
 import 'package:easy_fix/rating.dart';
 import 'package:easy_fix/requesst_machanic.dart';
@@ -223,6 +223,25 @@ class _MechanicDetailsPageState extends State<MechanicDetailsPage> {
                                 splashColor: Colors.blueGrey,
                                 child: Text(
                                   "Payment",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 16.0),
+                                ),
+                              ),
+                              RaisedButton(
+                                color: Color(0xff476cfb),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                               CanselMechanicPage(
+                                                documentID: widget.documentID,
+                                              )));
+                                },
+                                elevation: 4.0,
+                                splashColor: Colors.blueGrey,
+                                child: Text(
+                                  "Cansel",
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 16.0),
                                 ),

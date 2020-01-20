@@ -86,7 +86,7 @@ class _RequestPageState extends State<RequestPage> {
     );
 
     final cNumber = TextFormField(
-      keyboardType: TextInputType.text,
+      keyboardType: TextInputType.number,
       style: style,
       validator: (value) {
         if (value.isEmpty) {
@@ -121,7 +121,7 @@ class _RequestPageState extends State<RequestPage> {
               "Vehicle_Type": dropdownValue,
               "Current_Phone": _currentPhone.text,
               "Trouble": _trouble.text,
-              "vehicle_Number": _vehicleNumber
+              "vehicle_Number": _vehicleNumber.text,
             }).then((_) {
               setState(() {
                 _isSigningIn = false;
