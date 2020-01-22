@@ -16,6 +16,7 @@ class LoginPageState extends State<LoginPage> {
   TextEditingController _editingController1 = TextEditingController();
   TextEditingController _editingController2 = TextEditingController();
   bool _isSigningIn = false;
+  bool _showPassword = false;
 
   @override
   Widget build(BuildContext context) {
@@ -33,12 +34,21 @@ class LoginPageState extends State<LoginPage> {
 
     final passwordField = TextFormField(
       keyboardType: TextInputType.text,
-      obscureText: true,
+      obscureText: !_showPassword,
       style: style,
       controller: _editingController2,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hintText: "Password",
+          hintText: "Password ",
+          suffixIcon: GestureDetector(
+              onTap: () {
+                setState(() {
+                  _showPassword = !_showPassword;
+                });
+              },
+              child: Icon(
+                _showPassword ? Icons.visibility : Icons.visibility_off,
+              )),
           border:
               OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
@@ -73,7 +83,11 @@ class LoginPageState extends State<LoginPage> {
               return;
             } else {
               Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => HomePage(phoneNumber: _editingController1.text,)));
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => HomePage(
+                            phoneNumber: _editingController1.text,
+                          )));
             }
           } else {
             Alert(
@@ -106,10 +120,10 @@ class LoginPageState extends State<LoginPage> {
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () {
           Navigator.pop(context);
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => FirstlogPage()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => FirstlogPage()));
         },
         child: Text(
           "Register",
@@ -125,9 +139,8 @@ class LoginPageState extends State<LoginPage> {
         child: Container(
           margin: EdgeInsets.fromLTRB(30, 100, 30, 10),
           color: Colors.white,
-          child: ListView(
-            children: <Widget>[
-             Column(
+          child: ListView(children: <Widget>[
+            Column(
               children: <Widget>[
                 _isSigningIn ? LinearProgressIndicator() : SizedBox.shrink(),
                 Image.asset(
@@ -144,8 +157,7 @@ class LoginPageState extends State<LoginPage> {
                 registerButon,
               ],
             ),
-            ]
-          ),
+          ]),
         ),
       ),
     );

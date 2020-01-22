@@ -22,6 +22,8 @@ class _SignupPageState extends State<SignupPage> {
   TextEditingController _editingController6 = TextEditingController();
 
   bool _isSigningIn = false;
+  bool _showPassword = false;
+  bool _showconPassword = false;
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +82,6 @@ class _SignupPageState extends State<SignupPage> {
 
     final email = TextFormField(
       keyboardType: TextInputType.emailAddress,
-      obscureText: false,
       style: style,
       controller: _editingController4,
       decoration: InputDecoration(
@@ -92,7 +93,7 @@ class _SignupPageState extends State<SignupPage> {
 
     final passwordField = TextFormField(
       keyboardType: TextInputType.text,
-      obscureText: true,
+      obscureText: _showPassword ,
       style: style,
       validator: (value) {
         if (value.isEmpty) {
@@ -104,12 +105,21 @@ class _SignupPageState extends State<SignupPage> {
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           hintText: "Password",
+          suffixIcon: GestureDetector(
+              onTap: () {
+                setState(() {
+                  _showPassword = !_showPassword;
+                });
+              },
+              child: Icon(
+                _showPassword ? Icons.visibility : Icons.visibility_off,
+              )),
           border:
               OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
     final confermpasswordField = TextFormField(
       keyboardType: TextInputType.text,
-      obscureText: true,
+      obscureText: _showconPassword,
       style: style,
       validator: (value) {
         if (value.isEmpty) {
@@ -121,6 +131,15 @@ class _SignupPageState extends State<SignupPage> {
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           hintText: "Conferm Password",
+          suffixIcon: GestureDetector(
+              onTap: () {
+                setState(() {
+                  _showconPassword = !_showconPassword;
+                });
+              },
+              child: Icon(
+                _showconPassword ? Icons.visibility : Icons.visibility_off,
+              )),
           border:
               OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
