@@ -14,12 +14,12 @@ class _SignupPageState extends State<SignupPage> {
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 20.0);
   var _formKey = GlobalKey<FormState>();
 
-  TextEditingController _editingController1 = TextEditingController();
-  TextEditingController _editingController2 = TextEditingController();
-  TextEditingController _editingController3 = TextEditingController();
-  TextEditingController _editingController4 = TextEditingController();
-  TextEditingController _editingController5 = TextEditingController();
-  TextEditingController _editingController6 = TextEditingController();
+  TextEditingController _firstName = TextEditingController();
+  TextEditingController _lastName = TextEditingController();
+  TextEditingController _idfield = TextEditingController();
+  TextEditingController _email = TextEditingController();
+  TextEditingController _password = TextEditingController();
+  TextEditingController _conPassword = TextEditingController();
 
   bool _isSigningIn = false;
   bool _showPassword = false;
@@ -36,7 +36,7 @@ class _SignupPageState extends State<SignupPage> {
         }
         return null;
       },
-      controller: _editingController1,
+      controller: _firstName,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           hintText: "First Name",
@@ -54,7 +54,7 @@ class _SignupPageState extends State<SignupPage> {
         }
         return null;
       },
-      controller: _editingController2,
+      controller: _lastName,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           hintText: "Last Name",
@@ -72,7 +72,7 @@ class _SignupPageState extends State<SignupPage> {
         }
         return null;
       },
-      controller: _editingController3,
+      controller: _idfield,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           hintText: "ID",
@@ -83,7 +83,7 @@ class _SignupPageState extends State<SignupPage> {
     final email = TextFormField(
       keyboardType: TextInputType.emailAddress,
       style: style,
-      controller: _editingController4,
+      controller: _email,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           hintText: "Email",
@@ -101,7 +101,7 @@ class _SignupPageState extends State<SignupPage> {
         }
         return null;
       },
-      controller: _editingController5,
+      controller: _password,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           hintText: "Password",
@@ -127,7 +127,7 @@ class _SignupPageState extends State<SignupPage> {
         }
         return null;
       },
-      controller: _editingController6,
+      controller: _conPassword,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           hintText: "Conferm Password",
@@ -157,7 +157,7 @@ class _SignupPageState extends State<SignupPage> {
           });
 
           if (_formKey.currentState.validate()) {
-            if (_editingController5.text != _editingController6.text) {
+            if (_password.text != _conPassword.text) {
               Alert(
                 context: context,
                 title: "Password is not match",
@@ -169,24 +169,24 @@ class _SignupPageState extends State<SignupPage> {
               });
               return;
             }
-            if ((_editingController3.text.length == 10 &&
-                    _isNumeric(_editingController3.text.substring(0, 9)) &&
-                    _editingController3.text
+            if ((_idfield.text.length == 10 &&
+                    _isNumeric(_idfield.text.substring(0, 9)) &&
+                    _idfield.text
                         .toString()
                         .toLowerCase()
                         .endsWith("v")) ||
-                (_editingController3.text.length == 12 &&
-                    _isNumeric(_editingController3.text.substring(0, 9)))) {
+                (_idfield.text.length == 12 &&
+                    _isNumeric(_idfield.text.substring(0, 9)))) {
               Firestore.instance
                   .collection("Customers")
                   .document(widget.phoneNumber)
                   .setData({
-                "First Name": _editingController1.text,
-                "Last Name": _editingController2.text,
-                "id": _editingController3.text,
-                "Email": _editingController4.text,
-                "pass": _editingController5.text,
-                "conpass": _editingController6.text,
+                "First Name": _firstName.text,
+                "Last Name": _lastName.text,
+                "id": _idfield.text,
+                "Email": _email.text,
+                "pass": _password.text,
+                "conpass": _conPassword.text,
                 "Type": "Customer"
               }).then((_) {
                 setState(() {

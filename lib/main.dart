@@ -49,7 +49,7 @@ class FirstlogPage extends StatefulWidget {
 
 class _FirstlogPageState extends State<FirstlogPage> {
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 20.0);
-  TextEditingController _editingController = TextEditingController();
+  TextEditingController _phoneNumber = TextEditingController();
   bool _isSigningIn = false;
 
   @override
@@ -57,7 +57,7 @@ class _FirstlogPageState extends State<FirstlogPage> {
     final phonefeild = TextFormField(
       keyboardType: TextInputType.number,
       style: style,
-      controller: _editingController,
+      controller: _phoneNumber,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           hintText: "Enter Your Mobile Number",
@@ -79,7 +79,7 @@ class _FirstlogPageState extends State<FirstlogPage> {
 
           String patttern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
           RegExp regExp = new RegExp(patttern);
-          if (!regExp.hasMatch(_editingController.text)) {
+          if (!regExp.hasMatch(_phoneNumber.text)) {
             Alert(
               context: context,
               title: "Phone number invalid!",
@@ -93,7 +93,7 @@ class _FirstlogPageState extends State<FirstlogPage> {
           }
           var userDoc = await Firestore.instance
               .collection("Customers")
-              .document(_editingController.text)
+              .document(_phoneNumber.text)
               .get();
 
           if (userDoc.exists) {
@@ -111,18 +111,18 @@ class _FirstlogPageState extends State<FirstlogPage> {
 
           Firestore.instance
               .collection("Customers")
-              .document(_editingController.text)
-              .setData({"keyphone": _editingController.text}).then((_) {
+              .document(_phoneNumber.text)
+              .setData({"keyphone": _phoneNumber.text}).then((_) {
             setState(() {
               _isSigningIn = false;
             });
-            UserProvider.savePhoneNumber(_editingController.text);
+            UserProvider.savePhoneNumber(_phoneNumber.text);
             print("completed");
             Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        SignupPage(phoneNumber: _editingController.text)));
+                        SignupPage(phoneNumber: _phoneNumber.text)));
           }).catchError((err) {
             setState(() {
               _isSigningIn = false;

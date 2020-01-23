@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_fix/home1.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_fix/mechanicDetails.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class RequestPage extends StatefulWidget {
   String documentID;
@@ -112,6 +113,21 @@ class _RequestPageState extends State<RequestPage> {
           setState(() {
             _isSigningIn = true;
           });
+
+          String patttern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+          RegExp regExp = new RegExp(patttern);
+          if (!regExp.hasMatch(_currentPhone.text)) {
+            Alert(
+              context: context,
+              title: "Phone number invalid!",
+              desc: "Enter a valid phone number!",
+              type: AlertType.warning,
+            ).show();
+            setState(() {
+              _isSigningIn = false;
+            });
+            return;
+            }
 
           if (_formKey.currentState.validate()) {
             Firestore.instance
