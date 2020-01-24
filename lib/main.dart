@@ -139,37 +139,41 @@ class _FirstlogPageState extends State<FirstlogPage> {
       ),
     );
     return new Scaffold(
+      
       body: Center(
         child: Container(
           color: Colors.white,
           child: Padding(
             padding: const EdgeInsets.all(36.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                _isSigningIn ? LinearProgressIndicator() : SizedBox.shrink(),
-                Spacer(),
-                Image.asset(
-                  "assets/logo.jpg",
-                  fit: BoxFit.contain,
+            
+            child: ListView(
+                          children: <Widget>[
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    _isSigningIn ? LinearProgressIndicator() : SizedBox.shrink(),
+                    Image.asset(
+                      "assets/logo.jpg",
+                      fit: BoxFit.contain,
+                    ),
+                    SizedBox(height: 20.0),
+                    phonefeild,
+                    SizedBox(
+                      height: 40.0,
+                    ),
+                    next,
+                    SizedBox(height: 30,),
+                    InkWell(child: Text("If you have a account click hear....!!",textAlign: TextAlign.center,style: TextStyle(fontSize: 22,color: Colors.blue),),onTap: () {
+                     Navigator.pop(context);
+                     Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => LoginPage()));
+                    },),
+                    
+                  ],
                 ),
-                SizedBox(height: 20.0),
-                phonefeild,
-                SizedBox(
-                  height: 40.0,
-                ),
-                next,
-                SizedBox(height: 30,),
-                InkWell(child: Text("If you have a account click hear....!!",textAlign: TextAlign.center,style: TextStyle(fontSize: 22,color: Colors.blue),),onTap: () {
-                 Navigator.pop(context);
-                 Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => LoginPage()));
-                },),
-                
-                Spacer()
               ],
             ),
           ),

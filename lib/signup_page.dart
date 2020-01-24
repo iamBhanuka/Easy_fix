@@ -64,7 +64,6 @@ class _SignupPageState extends State<SignupPage> {
 
     final idField = TextFormField(
       keyboardType: TextInputType.text,
-      obscureText: false,
       style: style,
       validator: (value) {
         if (value.isEmpty) {
@@ -93,7 +92,7 @@ class _SignupPageState extends State<SignupPage> {
 
     final passwordField = TextFormField(
       keyboardType: TextInputType.text,
-      obscureText: _showPassword ,
+      obscureText: !_showPassword ,
       style: style,
       validator: (value) {
         if (value.isEmpty) {
@@ -119,7 +118,7 @@ class _SignupPageState extends State<SignupPage> {
     );
     final confermpasswordField = TextFormField(
       keyboardType: TextInputType.text,
-      obscureText: _showconPassword,
+      obscureText: !_showconPassword,
       style: style,
       validator: (value) {
         if (value.isEmpty) {
@@ -169,6 +168,21 @@ class _SignupPageState extends State<SignupPage> {
               });
               return;
             }
+
+          String patttern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+          RegExp regExp = new RegExp(patttern);
+          if (!regExp.hasMatch(_email.text)) {
+            Alert(
+              context: context,
+              title: "Email invalid!",
+              desc: "Enter a valid Email Address!",
+              type: AlertType.warning,
+            ).show();
+            setState(() {
+              _isSigningIn = false;
+            });
+            return;
+          }
             if ((_idfield.text.length == 10 &&
                     _isNumeric(_idfield.text.substring(0, 9)) &&
                     _idfield.text
