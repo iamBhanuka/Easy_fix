@@ -45,7 +45,7 @@ class _RatePageState extends State<RatePage> {
                   Container(
                     child: StreamBuilder(
                       stream: Firestore.instance
-                          .collection("mechanic")
+                          .collection("users")
                           .document(widget.documentID)
                           .snapshots(),
                       builder:
@@ -131,35 +131,38 @@ class _RatePageState extends State<RatePage> {
                             RaisedButton(
                               color: Color(0xff476cfb),
                               onPressed: () {
+                                Firestore.instance.collection("users").document(widget.documentID).updateData({
+                                  "rate": FieldValue.arrayUnion([_rating])
+                                });
+                                
+                                
                                 Alert(
                                   context: context,
                                   type: AlertType.success,
                                   title: "Thank You",
-                                  desc:
-                                      "Thaks for being with us.....!!",
-                                   buttons: [
-                                     DialogButton(
-                                       child: Text(
-                                         "Thank You",
-                                         style: TextStyle(
+                                  desc: "Thaks for being with us.....!!",
+                                  buttons: [
+                                    DialogButton(
+                                      child: Text(
+                                        "Thank You",
+                                        style: TextStyle(
                                             color: Colors.white, fontSize: 20),
-                                       ),
-                                      onPressed: (){
-                                      Navigator.of(context).pop();
-                                      Navigator.push(
-                                     context,
-                                     MaterialPageRoute(
-                                         builder: (BuildContext context) =>
-                                             HomePage()));
-                                },
-                                       color: Color.fromRGBO(0, 179, 134, 1.0),
-                                       radius: BorderRadius.circular(0.0),
-                                      
-                                     ),
-                                   ],
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        HomePage()));
+                                      },
+                                      color: Color.fromRGBO(0, 179, 134, 1.0),
+                                      radius: BorderRadius.circular(0.0),
+                                    ),
+                                  ],
                                 ).show();
                                 setState(() {});
-                                
                               },
                               elevation: 4.0,
                               splashColor: Colors.blueGrey,

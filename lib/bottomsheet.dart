@@ -41,14 +41,14 @@ class _BottomsheetPageState extends State<BottomsheetPage> {
     );
     print(widget.documentID);
     return StreamBuilder<DocumentSnapshot>(
-        stream: Firestore.instance
-            .collection('mechanic')
-            .document(widget.documentID)
-            .snapshots(),
+        stream: Firestore.instance.collection('users').document(widget.documentID).snapshots(),
+        
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (!snapshot.hasData) return const Text('Loading...');
           var data = snapshot.data;
+          var rating = data["rate"].reduce((t,v) => t+= v)/data["rate"].length;
+          print(rating);
           return Container(
             color: Colors.white70,
             child: Padding(
@@ -71,6 +71,10 @@ class _BottomsheetPageState extends State<BottomsheetPage> {
                     data['specification'],
                     style: TextStyle(fontSize: 20.0),
                   ),
+                  Text(
+                    rating.toString(),
+                    style: TextStyle(fontSize: 20.0),
+                  ),
                   SizedBox(
                     height: 15,
                   ),
@@ -83,4 +87,3 @@ class _BottomsheetPageState extends State<BottomsheetPage> {
         });
   }
 }
-

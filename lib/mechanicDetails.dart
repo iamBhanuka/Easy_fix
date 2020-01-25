@@ -51,7 +51,7 @@ class _MechanicDetailsPageState extends State<MechanicDetailsPage> {
                   Widget>[
                 StreamBuilder(
                   stream: Firestore.instance
-                      .collection("mechanic")
+                      .collection("users")
                       .document(widget.documentID)
                       .snapshots(),
                   builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
@@ -83,6 +83,7 @@ class _MechanicDetailsPageState extends State<MechanicDetailsPage> {
                         ],
                       );
                     } else {
+                      
                       return ListView(
                         
                         children: <Widget>[
@@ -107,13 +108,14 @@ class _MechanicDetailsPageState extends State<MechanicDetailsPage> {
               Container(
                 child: StreamBuilder<DocumentSnapshot>(
                   stream: Firestore.instance
-                      .collection('mechanic')
+                      .collection('users')
                       .document(widget.documentID)
                       .snapshots(),
                   builder: (BuildContext context,
                       AsyncSnapshot<DocumentSnapshot> snapshot) {
                     if (!snapshot.hasData) return const Text('Loading....');
                     var data = snapshot.data;
+                    print(data);
                     return Column(
                       children: <Widget>[
                         Container(

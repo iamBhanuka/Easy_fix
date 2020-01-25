@@ -15,8 +15,8 @@ import 'package:geocoder/geocoder.dart';
 import 'package:easy_fix/bottomsheet.dart';
 
 class HomePage extends StatefulWidget {
-  String phoneNumber;
-  HomePage({this.phoneNumber});
+  String userDoc;
+  HomePage({this.userDoc});
   @override
   State createState() => _HomePageState();
 }
@@ -48,11 +48,17 @@ class _HomePageState extends State<HomePage> {
 
   initState() {
     super.initState();
-    if (widget.phoneNumber == null) {
+    if (widget.userDoc == null) {
       UserProvider.getPhoneNumber().then((number) {
-        setState(() {
-          widget.phoneNumber = number;
-        });
+        Firestore.instance
+            .collection("users")
+            .document(widget.userDoc)
+            .get()
+            .then((doc) => {
+                  setState(() {
+                    doc.data["phoneNumber"] = number;
+                  })
+                });
       });
     }
 
@@ -101,7 +107,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void addMarkers() {
-    Firestore.instance.collection('mechanic').getDocuments().then((snapshots) {
+    Firestore.instance.collection('users').where("userType",isEqualTo: "mechanic").getDocuments().then((snapshots) {
       var machanicLocationIcon = snapshots.documents
           .toList()
           .map((DocumentSnapshot documentSnapshot) async => Marker(
@@ -135,7 +141,7 @@ class _HomePageState extends State<HomePage> {
   GlobalKey<ScaffoldState> _sacaffoldkey = new GlobalKey();
   @override
   Widget build(BuildContext context) {
-    print(widget.phoneNumber);
+    print(widget.userDoc);
     return new Scaffold(
       key: _sacaffoldkey,
       appBar: new AppBar(
@@ -178,8 +184,8 @@ class _HomePageState extends State<HomePage> {
                 child: Container(
                     child: StreamBuilder(
                   stream: Firestore.instance
-                      .collection("Customers")
-                      .document(widget.phoneNumber)
+                      .collection("users")
+                      .document(widget.userDoc)
                       .snapshots(),
                   builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                     if (snapshot.hasData && snapshot.data != null) {
@@ -233,7 +239,7 @@ class _HomePageState extends State<HomePage> {
                   context,
                   MaterialPageRoute(
                       builder: (BuildContext context) =>
-                          YourProfilePage(phoneNumber: widget.phoneNumber)));
+                          YourProfilePage(userDoc: widget.userDoc)));
             }),
             CoustomListTile(Icons.play_for_work, "Your Works", () {
               Navigator.pop(context);

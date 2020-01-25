@@ -7,8 +7,8 @@ import 'package:path/path.dart';
 import 'dart:io';
 
 class YourProfilePage extends StatefulWidget {
-  String phoneNumber;
-  YourProfilePage({this.phoneNumber});
+  String userDoc;
+  YourProfilePage({this.userDoc});
   @override
   _YourProfilePageState createState() => _YourProfilePageState();
 }
@@ -41,10 +41,10 @@ class _YourProfilePageState extends State<YourProfilePage> {
       print('Upload task ${uploadTask.isComplete}');
       uploadTask.onComplete.then((snap) {
         return fireebaseStorageRef.getDownloadURL().then((url) {
-          print(widget.phoneNumber);
+          print(widget.userDoc);
           Firestore.instance
-                .collection("Customers")
-                .document(widget.phoneNumber)
+                .collection("users")
+                .document(widget.userDoc)
                 .updateData({
               "Photo": url,
         

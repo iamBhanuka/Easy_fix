@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_fix/main.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_fix/home1.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:crypto/crypto.dart';
 
 class LoginPage extends StatefulWidget {
   String phoneNumber;
@@ -65,12 +68,24 @@ class LoginPageState extends State<LoginPage> {
             _isSigningIn = true;
           });
           var userDoc = await Firestore.instance
-              .collection("Customers")
-              .document(_editingController1.text)
-              .get();
+              .collection("users")
+              .where("phoneNumber",isEqualTo: _editingController1.text)
+              .getDocuments();
 
-          if (userDoc.exists) {
-            if (userDoc.data['pass'] != _editingController2.text) {
+          if (userDoc.documents.length > 0) {
+            if (userDoc.documents.first.data['userType'] != "Customer") {
+              Alert(
+                context: context,
+                title: "Your are not !",
+                desc: "A user already exist for this phone number!",
+                type: AlertType.error,
+              ).show();
+              setState(() {
+                _isSigningIn = false;
+              });
+              return;
+            }
+            if (userDoc.documents.first.data['pass'] != generateMd5(_editingController2.text)) {
               Alert(
                 context: context,
                 title: "Password doesn't match!",
@@ -86,7 +101,7 @@ class LoginPageState extends State<LoginPage> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => HomePage(
-                            phoneNumber: _editingController1.text,
+                            userDoc: _editingController1.text,
                           )));
             }
           } else {
@@ -161,5 +176,8 @@ class LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+   String generateMd5(String input) {
+    return md5.convert(utf8.encode(input)).toString();
   }
 }

@@ -92,11 +92,10 @@ class _FirstlogPageState extends State<FirstlogPage> {
             return;
           }
           var userDoc = await Firestore.instance
-              .collection("Customers")
-              .document(_phoneNumber.text)
-              .get();
+              .collection("users").where("phoneNumber",isEqualTo: _phoneNumber.text)
+              .getDocuments();
 
-          if (userDoc.exists) {
+          if (userDoc.documents.length > 0) {
             Alert(
               context: context,
               title: "User exits",
@@ -110,9 +109,8 @@ class _FirstlogPageState extends State<FirstlogPage> {
           }
 
           Firestore.instance
-              .collection("Customers")
-              .document(_phoneNumber.text)
-              .setData({"keyphone": _phoneNumber.text}).then((_) {
+              .collection("users")
+              .add({"phoneNumber": _phoneNumber.text}).then((doc) {
             setState(() {
               _isSigningIn = false;
             });
@@ -122,7 +120,7 @@ class _FirstlogPageState extends State<FirstlogPage> {
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        SignupPage(phoneNumber: _phoneNumber.text)));
+                        SignupPage(userDoc: doc.documentID)));
           }).catchError((err) {
             setState(() {
               _isSigningIn = false;

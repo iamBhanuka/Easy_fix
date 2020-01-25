@@ -3,8 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_fix/home1.dart';
 
 class VehiclePage extends StatefulWidget {
-  String phoneNumber;
-  VehiclePage({this.phoneNumber});
+  String userDoc;
+  VehiclePage({this.userDoc});
   @override
   _VehiclePageState createState() => _VehiclePageState();
 }
@@ -44,10 +44,10 @@ class _VehiclePageState extends State<VehiclePage> {
           var data = {"Hybride": _isChecked1, "Non Hybride": _isChecked2};
 
           print(data);
-          print(widget.phoneNumber);
+          print(widget.userDoc);
           Firestore.instance
-              .collection("Customers")
-              .document(widget.phoneNumber)
+              .collection("users")
+              .document(widget.userDoc)
               .updateData(data)
               .then((uhu) {
             setState(() {
@@ -58,7 +58,7 @@ class _VehiclePageState extends State<VehiclePage> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => HomePage(
-                          phoneNumber: widget.phoneNumber,
+                          userDoc: widget.userDoc,
                         )));
           }).catchError((err) {
             setState(() {

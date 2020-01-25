@@ -1,11 +1,14 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_fix/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:crypto/crypto.dart';
 
 class SignupPage extends StatefulWidget {
-  String phoneNumber;
-  SignupPage({this.phoneNumber});
+  String userDoc;
+  SignupPage({this.userDoc});
   @override
   _SignupPageState createState() => _SignupPageState();
 }
@@ -92,7 +95,7 @@ class _SignupPageState extends State<SignupPage> {
 
     final passwordField = TextFormField(
       keyboardType: TextInputType.text,
-      obscureText: !_showPassword ,
+      obscureText: !_showPassword,
       style: style,
       validator: (value) {
         if (value.isEmpty) {
@@ -169,39 +172,37 @@ class _SignupPageState extends State<SignupPage> {
               return;
             }
 
-          String patttern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-          RegExp regExp = new RegExp(patttern);
-          if (!regExp.hasMatch(_email.text)) {
-            Alert(
-              context: context,
-              title: "Email invalid!",
-              desc: "Enter a valid Email Address!",
-              type: AlertType.warning,
-            ).show();
-            setState(() {
-              _isSigningIn = false;
-            });
-            return;
-          }
+            String patttern =
+                r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+            RegExp regExp = new RegExp(patttern);
+            if (!regExp.hasMatch(_email.text)) {
+              Alert(
+                context: context,
+                title: "Email invalid!",
+                desc: "Enter a valid Email Address!",
+                type: AlertType.warning,
+              ).show();
+              setState(() {
+                _isSigningIn = false;
+              });
+              return;
+            }
             if ((_idfield.text.length == 10 &&
                     _isNumeric(_idfield.text.substring(0, 9)) &&
-                    _idfield.text
-                        .toString()
-                        .toLowerCase()
-                        .endsWith("v")) ||
+                    _idfield.text.toString().toLowerCase().endsWith("v")) ||
                 (_idfield.text.length == 12 &&
                     _isNumeric(_idfield.text.substring(0, 9)))) {
               Firestore.instance
-                  .collection("Customers")
-                  .document(widget.phoneNumber)
-                  .setData({
+                  .collection("users")
+                  .document(widget.userDoc)
+                  .updateData({
                 "First Name": _firstName.text,
                 "Last Name": _lastName.text,
                 "id": _idfield.text,
                 "Email": _email.text,
-                "pass": _password.text,
+                "pass": generateMd5(_password.text),
                 "conpass": _conPassword.text,
-                "Type": "Customer"
+                "userType": "Customer"
               }).then((_) {
                 setState(() {
                   _isSigningIn = false;
@@ -211,7 +212,7 @@ class _SignupPageState extends State<SignupPage> {
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            VehiclePage(phoneNumber: widget.phoneNumber)));
+                            VehiclePage(userDoc: widget.userDoc)));
               }).catchError((err) {
                 setState(() {
                   _isSigningIn = false;
@@ -300,5 +301,9 @@ class _SignupPageState extends State<SignupPage> {
       return false;
     }
     return double.tryParse(str) != null;
+  }
+
+  String generateMd5(String input) {
+    return md5.convert(utf8.encode(input)).toString();
   }
 }
