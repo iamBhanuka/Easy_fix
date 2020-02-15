@@ -6,8 +6,9 @@ class BottomsheetPage extends StatefulWidget {
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 20.0);
 
   String documentID;
+  String userId;
   // BottomsheetPage({this.phoneNumber, String documentID});
-  BottomsheetPage({this.documentID, String phoneNumber});
+  BottomsheetPage({this.documentID, String phoneNumber,this.userId});
 
   bool _isSigningIn = false;
   @override
@@ -31,6 +32,7 @@ class _BottomsheetPageState extends State<BottomsheetPage> {
               MaterialPageRoute(
                   builder: (BuildContext context) => RequestPage(
                         documentID: widget.documentID,
+                        userDoc: widget.userId,
                       )));
         },
         child: Text(
@@ -72,7 +74,7 @@ class _BottomsheetPageState extends State<BottomsheetPage> {
                     style: TextStyle(fontSize: 20.0),
                   ),
                   Text(
-                    rating.toString(),
+                    rating.toStringAsFixed(2),
                     style: TextStyle(fontSize: 20.0),
                   ),
                   SizedBox(

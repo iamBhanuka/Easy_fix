@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:easy_fix/logfirst.dart';
+
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
 //  import 'package:famguard/ui/signup.dart';
@@ -20,23 +21,16 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _phoneNumber;
+  FirebaseUser _user;
   _MyAppState() {
-    UserProvider.getPhoneNumber().then((number) {
-      if (number != null) {
-        setState(() {
-          _phoneNumber = number;
-          print("NUmber ${_phoneNumber}");
-        });
-      }
-    });
+    FirebaseAuth.instance.currentUser().then((user) => _user = user);
   }
 
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: _phoneNumber == null ? new FirstlogPage() : HomePage(),
+      home: _user == null ? new FirstlogPage() : HomePage(),
       theme: new ThemeData(primarySwatch: Colors.blue),
     );
   }
@@ -92,7 +86,8 @@ class _FirstlogPageState extends State<FirstlogPage> {
             return;
           }
           var userDoc = await Firestore.instance
-              .collection("users").where("phoneNumber",isEqualTo: _phoneNumber.text)
+              .collection("users")
+              .where("phoneNumber", isEqualTo: _phoneNumber.text)
               .getDocuments();
 
           if (userDoc.documents.length > 0) {
@@ -108,25 +103,32 @@ class _FirstlogPageState extends State<FirstlogPage> {
             return;
           }
 
-          Firestore.instance
-              .collection("users")
-              .add({"phoneNumber": _phoneNumber.text}).then((doc) {
-            setState(() {
-              _isSigningIn = false;
-            });
-            UserProvider.savePhoneNumber(_phoneNumber.text);
-            print("completed");
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        SignupPage(userDoc: doc.documentID)));
-          }).catchError((err) {
-            setState(() {
-              _isSigningIn = false;
-            });
-            print(err);
-          });
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => SignupPage(
+                        userDoc: _phoneNumber.text,
+                      )));
+
+          // Firestore.instance
+          //     .collection("users")
+          //     .add({"phoneNumber": _phoneNumber.text}).then((doc) {
+          //   setState(() {
+          //     _isSigningIn = false;
+          //   });
+          //   UserProvider.savePhoneNumber(_phoneNumber.text);
+          //   print("completed");
+          //   Navigator.pushReplacement(
+          //       context,
+          //       MaterialPageRoute(
+          //           builder: (context) =>
+          //               SignupPage(userDoc: doc.documentID)));
+          // }).catchError((err) {
+          //   setState(() {
+          //     _isSigningIn = false;
+          //   });
+          //   print(err);
+          // });
         },
         child: Text(
           "Next",
@@ -137,20 +139,20 @@ class _FirstlogPageState extends State<FirstlogPage> {
       ),
     );
     return new Scaffold(
-      
       body: Center(
         child: Container(
           color: Colors.white,
           child: Padding(
             padding: const EdgeInsets.all(36.0),
-            
             child: ListView(
-                          children: <Widget>[
+              children: <Widget>[
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    _isSigningIn ? LinearProgressIndicator() : SizedBox.shrink(),
+                    _isSigningIn
+                        ? LinearProgressIndicator()
+                        : SizedBox.shrink(),
                     Image.asset(
                       "assets/logo.jpg",
                       fit: BoxFit.contain,
@@ -161,15 +163,24 @@ class _FirstlogPageState extends State<FirstlogPage> {
                       height: 40.0,
                     ),
                     next,
-                    SizedBox(height: 30,),
-                    InkWell(child: Text("If you have a account click hear....!!",textAlign: TextAlign.center,style: TextStyle(fontSize: 22,color: Colors.blue),),onTap: () {
-                     Navigator.pop(context);
-                     Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) => LoginPage()));
-                    },),
-                    
+                    SizedBox(
+                      height: 30,
+                    ),
+                    InkWell(
+                      child: Text(
+                        "If you have a account click hear....!!",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 22, color: Colors.blue),
+                      ),
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    LoginPage()));
+                      },
+                    ),
                   ],
                 ),
               ],

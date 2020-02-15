@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_fix/home1.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_fix/mechanicDetails.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class RequestPage extends StatefulWidget {
+  String userDoc;
   String documentID;
-  RequestPage({this.documentID});
+  RequestPage({this.documentID, this.userDoc});
   @override
   _RequestPageState createState() => _RequestPageState();
 }
@@ -45,11 +47,12 @@ class _RequestPageState extends State<RequestPage> {
               (value) => DropdownMenuItem(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(value,
-                  style: TextStyle(fontSize: 25),),
+                  child: Text(
+                    value,
+                    style: TextStyle(fontSize: 25),
+                  ),
                 ),
                 value: value,
-                
               ),
             )
             .toList());
@@ -127,7 +130,7 @@ class _RequestPageState extends State<RequestPage> {
               _isSigningIn = false;
             });
             return;
-            }
+          }
 
           if (_formKey.currentState.validate()) {
             Firestore.instance
@@ -138,6 +141,8 @@ class _RequestPageState extends State<RequestPage> {
               "Current_Phone": _currentPhone.text,
               "Trouble": _trouble.text,
               "vehicle_Number": _vehicleNumber.text,
+              "complete": false,
+              "customer": widget.userDoc
             }).then((_) {
               setState(() {
                 _isSigningIn = false;
@@ -178,10 +183,8 @@ class _RequestPageState extends State<RequestPage> {
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () {
           Navigator.pop(context);
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => HomePage()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (BuildContext context) => HomePage()));
         },
         child: Text(
           "Cansel",
@@ -203,9 +206,10 @@ class _RequestPageState extends State<RequestPage> {
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
-                  
                   children: <Widget>[
-                    _isSigningIn ? LinearProgressIndicator() : SizedBox.shrink(),
+                    _isSigningIn
+                        ? LinearProgressIndicator()
+                        : SizedBox.shrink(),
                     Image.asset(
                       "assets/logo.jpg",
                       fit: BoxFit.contain,
@@ -216,15 +220,21 @@ class _RequestPageState extends State<RequestPage> {
                       height: 10.0,
                     ),
                     trouble,
-                    SizedBox(height: 10.0,),
+                    SizedBox(
+                      height: 10.0,
+                    ),
                     cNumber,
-                    SizedBox(height: 10.0,),
+                    SizedBox(
+                      height: 10.0,
+                    ),
                     vehiclenumber,
                     SizedBox(
                       height: 20.0,
                     ),
                     request,
-                    SizedBox(height: 20.00,),
+                    SizedBox(
+                      height: 20.00,
+                    ),
                     canselButon,
                   ],
                 ),

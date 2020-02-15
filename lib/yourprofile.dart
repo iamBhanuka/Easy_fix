@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:logger/logger.dart';
 import 'package:path/path.dart';
 import 'dart:io';
 
@@ -38,10 +39,16 @@ class _YourProfilePageState extends State<YourProfilePage> {
       uploadTask.events.listen((event) {
         print(event.type.toString());
       });
-      print('Upload task ${uploadTask.isComplete}');
       uploadTask.onComplete.then((snap) {
+      print('Upload task ${uploadTask.isComplete}');
+
+      setState(() {
+        print("Profile picture uploaded");
+        Scaffold.of(context).showSnackBar(SnackBar(content: Text("Your Profile picture uploaded"),));
+
+      });
         return fireebaseStorageRef.getDownloadURL().then((url) {
-          print(widget.userDoc);
+          // print(widget.userDoc);
           Firestore.instance
                 .collection("users")
                 .document(widget.userDoc)
@@ -54,15 +61,13 @@ class _YourProfilePageState extends State<YourProfilePage> {
               });
             });         
           print(url);
+
+          Logger().i(url);
         });
       });
      
 
-      setState(() {
-        print("Profile picture uploaded");
-        Scaffold.of(context).showSnackBar(SnackBar(content: Text("Your Profile picture uploaded"),));
-
-      });
+      
     }
 
     return new Scaffold(

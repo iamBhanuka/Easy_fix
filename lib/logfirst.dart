@@ -2,14 +2,14 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_fix/main.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_fix/home1.dart';
+import 'package:logger/logger.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:crypto/crypto.dart';
 
 class LoginPage extends StatefulWidget {
-  String phoneNumber;
-  LoginPage({this.phoneNumber});
   @override
   State createState() => new LoginPageState();
 }
@@ -20,22 +20,34 @@ class LoginPageState extends State<LoginPage> {
   TextEditingController _editingController2 = TextEditingController();
   bool _isSigningIn = false;
   bool _showPassword = false;
+  String _email;
+  String _password;
+
+  var formkey = new GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     final phoneField = TextFormField(
-      keyboardType: TextInputType.number,
+      // key: formkey,
+      keyboardType: TextInputType.emailAddress,
       obscureText: false,
       style: style,
       controller: _editingController1,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hintText: "Mobile Number",
+          hintText: "Email Address",
           border:
               OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+      validator: (value) => value.isEmpty ? 'Email can\'t be Empty' : null,
+      onChanged: (val) {
+        setState(() {
+          _email = val;
+        });
+      },
     );
 
     final passwordField = TextFormField(
+      // key: formkey,
       keyboardType: TextInputType.text,
       obscureText: !_showPassword,
       style: style,
@@ -54,6 +66,12 @@ class LoginPageState extends State<LoginPage> {
               )),
           border:
               OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+      validator: (value) => value.isEmpty ? 'Password can\'t be Empty' : null,
+      onChanged: (val) {
+        setState(() {
+          _password = val;
+        });
+      },
     );
 
     final loginButon = Material(
@@ -67,54 +85,69 @@ class LoginPageState extends State<LoginPage> {
           setState(() {
             _isSigningIn = true;
           });
+
           var userDoc = await Firestore.instance
               .collection("users")
-              .where("phoneNumber",isEqualTo: _editingController1.text)
+              .where("email", isEqualTo: _editingController1.text)
               .getDocuments();
 
-          if (userDoc.documents.length > 0) {
-            if (userDoc.documents.first.data['userType'] != "Customer") {
-              Alert(
-                context: context,
-                title: "Your are not !",
-                desc: "A user already exist for this phone number!",
-                type: AlertType.error,
-              ).show();
-              setState(() {
-                _isSigningIn = false;
-              });
-              return;
-            }
-            if (userDoc.documents.first.data['pass'] != generateMd5(_editingController2.text)) {
-              Alert(
-                context: context,
-                title: "Password doesn't match!",
-                desc: "A user already exist for this phone number!",
-                type: AlertType.error,
-              ).show();
-              setState(() {
-                _isSigningIn = false;
-              });
-              return;
+          if (formkey.currentState.validate()) {
+            // FirebaseUser user = (await FirebaseAuth.instance
+            //     .signInWithEmailAndPassword(
+            //         email: _email, password: _password)) as FirebaseUser;
+
+            if (userDoc.documents.length > 0) {
+              if (userDoc.documents.first.data['userType'] != "Customer") {
+                Alert(
+                  context: context,
+                  title: "Your are not !",
+                  desc: "A user already exist for this phone number!",
+                  type: AlertType.error,
+                ).show();
+                setState(() {
+                  _isSigningIn = false;
+                });
+                return;
+              } else {
+                if (_email != null && _password != null) {
+                  FirebaseAuth.instance
+                      .signInWithEmailAndPassword(
+                          email: _email, password: _password)
+                      .then((res) {
+                    Logger().i(res);
+
+                    Logger().i(FirebaseAuth.instance.currentUser().then((user) {
+                      Logger().i(user.uid);
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  HomePage(userDoc: user.uid)));
+                    }));
+                  }).catchError((error) {
+                    Alert(
+                      context: context,
+                      title: "Your are not !",
+                      desc: "A user already exist for this phone number!",
+                      type: AlertType.error,
+                    ).show();
+                  });
+                } else {
+                  Logger().i("Empty");
+                }
+              }
             } else {
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => HomePage(
-                            userDoc: _editingController1.text,
-                          )));
+              Alert(
+                context: context,
+                title: "You are not registered!",
+                desc: "A user already exist for this email address!",
+                type: AlertType.error,
+              ).show();
+              setState(() {
+                _isSigningIn = false;
+              });
+              return;
             }
-          } else {
-            Alert(
-              context: context,
-              title: "You are not registered!",
-              desc: "A user already exist for this phone number!",
-              type: AlertType.error,
-            ).show();
-            setState(() {
-              _isSigningIn = false;
-            });
-            return;
           }
         },
         child: Text(
@@ -154,30 +187,34 @@ class LoginPageState extends State<LoginPage> {
         child: Container(
           margin: EdgeInsets.fromLTRB(30, 100, 30, 10),
           color: Colors.white,
-          child: ListView(children: <Widget>[
-            Column(
-              children: <Widget>[
-                _isSigningIn ? LinearProgressIndicator() : SizedBox.shrink(),
-                Image.asset(
-                  "assets/logo.jpg",
-                  fit: BoxFit.contain,
-                ),
-                SizedBox(height: 45.0),
-                phoneField,
-                SizedBox(height: 25.0),
-                passwordField,
-                SizedBox(height: 35.0),
-                loginButon,
-                SizedBox(height: 35.0),
-                registerButon,
-              ],
-            ),
-          ]),
+          child: Form(
+            key: formkey,
+            child: ListView(children: <Widget>[
+              Column(
+                children: <Widget>[
+                  _isSigningIn ? LinearProgressIndicator() : SizedBox.shrink(),
+                  Image.asset(
+                    "assets/logo.jpg",
+                    fit: BoxFit.contain,
+                  ),
+                  SizedBox(height: 45.0),
+                  phoneField,
+                  SizedBox(height: 25.0),
+                  passwordField,
+                  SizedBox(height: 35.0),
+                  loginButon,
+                  SizedBox(height: 35.0),
+                  registerButon,
+                ],
+              ),
+            ]),
+          ),
         ),
       ),
     );
   }
-   String generateMd5(String input) {
+
+  String generateMd5(String input) {
     return md5.convert(utf8.encode(input)).toString();
   }
 }

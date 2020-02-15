@@ -37,6 +37,7 @@ dependencies:
   # stripe_payment: ^1.0.6
   flutter_rating_bar: ^3.0.1+1
   logger: ^0.8.3
+  dio:
 
 
 dev_dependencies:
@@ -62,6 +63,7 @@ flutter:
     - assets/customer.png
     - assets/mechanic.png
     - assets/aaa.png
+    - assets/dick.png
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

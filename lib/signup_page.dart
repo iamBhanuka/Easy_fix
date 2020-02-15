@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_fix/vehicle.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:crypto/crypto.dart';
 
@@ -153,7 +155,7 @@ class _SignupPageState extends State<SignupPage> {
       child: MaterialButton(
         minWidth: MediaQuery.of(context).size.width,
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        onPressed: () {
+        onPressed: () async {
           setState(() {
             _isSigningIn = true;
           });
@@ -187,38 +189,72 @@ class _SignupPageState extends State<SignupPage> {
               });
               return;
             }
+
+            var userDoc = await Firestore.instance
+                .collection("users")
+                .where("email", isEqualTo: _email.text)
+                .getDocuments();
+
+            if (userDoc.documents.length > 0) {
+              Alert(
+                context: context,
+                title: "User exits",
+                desc:
+                    "A user already exist for this email address! try again !!",
+                type: AlertType.error,
+              ).show();
+              setState(() {
+                _isSigningIn = false;
+              });
+              return;
+            }
             if ((_idfield.text.length == 10 &&
                     _isNumeric(_idfield.text.substring(0, 9)) &&
                     _idfield.text.toString().toLowerCase().endsWith("v")) ||
                 (_idfield.text.length == 12 &&
                     _isNumeric(_idfield.text.substring(0, 9)))) {
-              Firestore.instance
-                  .collection("users")
-                  .document(widget.userDoc)
-                  .updateData({
-                "First Name": _firstName.text,
-                "Last Name": _lastName.text,
-                "id": _idfield.text,
-                "Email": _email.text,
-                "pass": generateMd5(_password.text),
-                "conpass": _conPassword.text,
-                "userType": "Customer"
-              }).then((_) {
-                setState(() {
-                  _isSigningIn = false;
-                });
+              FirebaseAuth.instance
+                  .createUserWithEmailAndPassword(
+                      email: _email.text, password: _password.text)
+                  .then((res) {
+                // FirebaseAuth.instance
+                //     .signInWithEmailAndPassword(
+                //         email: _email.text, password: _password.text)
+                //     .then((result) {
+                FirebaseAuth.instance.currentUser().then((user) {
+                  Logger().i(user.uid);
+                  Firestore.instance
+                      .collection("users")
+                      .document(user.uid)
+                      .setData({
+                    "First Name": _firstName.text,
+                    "Last Name": _lastName.text,
+                    "id": _idfield.text,
+                    "email": _email.text,
+                    "userType": "Customer",
+                    "phoneNumber": widget.userDoc
+                  }).then((_) async {
+                    setState(() {
+                      _isSigningIn = false;
+                    });
 
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            VehiclePage(userDoc: widget.userDoc)));
-              }).catchError((err) {
-                setState(() {
-                  _isSigningIn = false;
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                VehiclePage(userDoc: user.uid)));
+                  }).catchError((err) {
+                    setState(() {
+                      _isSigningIn = false;
+                    });
+                    print(err);
+                  });
+                  // });
                 });
-                print(err);
               });
+
+              //  Logger().i(users);
+
             } else {
               Alert(
                 context: context,
@@ -301,9 +337,5 @@ class _SignupPageState extends State<SignupPage> {
       return false;
     }
     return double.tryParse(str) != null;
-  }
-
-  String generateMd5(String input) {
-    return md5.convert(utf8.encode(input)).toString();
   }
 }

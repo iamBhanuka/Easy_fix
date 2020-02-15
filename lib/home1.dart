@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'package:dio/dio.dart';
 import 'package:easy_fix/logfirst.dart';
 import 'package:easy_fix/providers/user_provider.dart';
 import 'package:easy_fix/yourprofile.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_fix/freeworks.dart';
 import 'package:easy_fix/help.dart';
@@ -13,6 +15,7 @@ import 'package:location/location.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:easy_fix/bottomsheet.dart';
+import 'package:logger/logger.dart';
 
 class HomePage extends StatefulWidget {
   String userDoc;
@@ -56,7 +59,7 @@ class _HomePageState extends State<HomePage> {
             .get()
             .then((doc) => {
                   setState(() {
-                    doc.data["phoneNumber"] = number;
+                    // doc.data["phoneNumber"] = number;
                   })
                 });
       });
@@ -78,6 +81,8 @@ class _HomePageState extends State<HomePage> {
 
           final _currentCameraPosition = CameraPosition(
               target: LatLng(location.latitude, location.longitude), zoom: 13);
+
+          addGasStations();
 
           _controller.animateCamera(
               CameraUpdate.newCameraPosition(_currentCameraPosition));
@@ -107,7 +112,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   void addMarkers() {
-    Firestore.instance.collection('users').where("userType",isEqualTo: "mechanic").getDocuments().then((snapshots) {
+    Firestore.instance
+        .collection('users')
+        .where("userType", isEqualTo: "mechanic")
+        .getDocuments()
+        .then((snapshots) {
       var machanicLocationIcon = snapshots.documents
           .toList()
           .map((DocumentSnapshot documentSnapshot) async => Marker(
@@ -124,6 +133,7 @@ class _HomePageState extends State<HomePage> {
                   builder: (builder) {
                     return BottomsheetPage(
                       documentID: documentSnapshot.documentID,
+                      userId: widget.userDoc,
                     );
                   },
                 );
@@ -190,7 +200,7 @@ class _HomePageState extends State<HomePage> {
                   builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                     if (snapshot.hasData && snapshot.data != null) {
                       DocumentSnapshot doc = snapshot.data;
-                      print(doc.data);
+                      Logger().i(doc.data);
                       return Column(
                         children: <Widget>[
                           ClipOval(
@@ -215,21 +225,23 @@ class _HomePageState extends State<HomePage> {
                         ],
                       );
                     } else {
-                      return Column(
-                        children: <Widget>[
-                          ClipOval(
-                              child: Image.asset(
-                            'assets/aaa.png',
-                            width: 100,
-                            height: 100,
-                          )),
-                          Text(
-                            'Bhanuka',
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 25.0),
-                          )
-                        ],
-                      );
+                      // TODO: Loading animation
+
+                      // return Column(
+                      //   children: <Widget>[
+                      //     ClipOval(
+                      //         child: Image.asset(
+                      //       'assets/aaa.png',
+                      //       width: 100,
+                      //       height: 100,
+                      //     )),
+                      //     Text(
+                      //       'fqjukqud',
+                      //       style:
+                      //           TextStyle(color: Colors.white, fontSize: 25.0),
+                      //     )
+                      //   ],
+                      // );
                     }
                   },
                 ))),
@@ -246,7 +258,8 @@ class _HomePageState extends State<HomePage> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (BuildContext context) => WorksPage()));
+                      builder: (BuildContext context) =>
+                          WorksPage(widget.userDoc)));
             }),
             CoustomListTile(Icons.work, "Free Works", () {
               Navigator.pop(context);
@@ -277,18 +290,59 @@ class _HomePageState extends State<HomePage> {
                       builder: (BuildContext context) => HelpPage()));
             }),
             CoustomListTile(Icons.lock, "Sign Out", () {
-              UserProvider.deleteNumber().then((v) {
+              FirebaseAuth.instance.signOut().then((_) {
+                Navigator.pop(context);
                 Navigator.pop(context);
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (BuildContext context) => LoginPage()));
               });
+
+              // UserProvider.deleteNumber().then((v) {
+              //   Navigator.pop(context);
+              //   Navigator.pop(context);
+              //   Navigator.push(
+              //       context,
+              //       MaterialPageRoute(
+              //           builder: (BuildContext context) => LoginPage()));
+              // });
             }),
           ],
         ),
       ),
     );
+  }
+
+  void addGasStations() async {
+    final location = await _locationService.getLocation();
+    final res = await Dio().get(
+        "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.latitude},${location.longitude}",
+        queryParameters: {
+          "key": "AIzaSyAFCDtNXwUO2RlzacQ7_yQNRblt0NraR5c",
+          "radius": 1500,
+          "type": "gas_station"
+        });
+
+    var mapicon = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(size: Size(15, 15), devicePixelRatio: 0.7),
+        "assets/dick.png");
+
+    setState(() {
+      allMarkers.addAll(
+        (res.data["results"] as List).map(
+          (station) => Marker(
+            icon: mapicon,
+            markerId: MarkerId(station["id"]),
+            position: LatLng(station["geometry"]["location"]["lat"],
+                station["geometry"]["location"]["lng"]),
+            infoWindow: InfoWindow(title: station["name"], snippet: "gg"),
+            // "${station["opening_hours"]["open_now"] ? "open now" : "closed"}"),
+          ),
+        ),
+      );
+      print(allMarkers.length);
+    });
   }
 }
 
