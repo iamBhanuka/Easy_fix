@@ -127,13 +127,19 @@ class LoginPageState extends State<LoginPage> {
                   }).catchError((error) {
                     Alert(
                       context: context,
-                      title: "Your are not !",
+                      title: "Yoursanmdbakjbfhabd are not !",
                       desc: "A user already exist for this phone number!",
                       type: AlertType.error,
                     ).show();
                   });
                 } else {
-                  Logger().i("Empty");
+                  Alert(
+                      context: context,
+                      title: "Your are not !",
+                      desc: "A user already exist for this phone number!",
+                      type: AlertType.error,
+                    );
+                  
                 }
               }
             } else {

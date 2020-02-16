@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_fix/home1.dart';
+import 'package:easy_fix/waiting_request_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_fix/mechanicDetails.dart';
@@ -20,6 +21,7 @@ class _RequestPageState extends State<RequestPage> {
   TextEditingController _trouble = TextEditingController();
   TextEditingController _currentPhone = TextEditingController();
   TextEditingController _vehicleNumber = TextEditingController();
+  TextEditingController _name = TextEditingController();
 
   String dropdownValue = 'Car';
   bool _isSigningIn = false;
@@ -89,6 +91,22 @@ class _RequestPageState extends State<RequestPage> {
               OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
 
+    final cname = TextFormField(
+      keyboardType: TextInputType.text,
+      style: style,
+      validator: (value) {
+        if (value.isEmpty) {
+          return "Enter Your Name";
+        }
+      },
+      controller: _name,
+      decoration: InputDecoration(
+          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+          hintText: "Enter your name",
+          border:
+              OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+    );
+
     final cNumber = TextFormField(
       keyboardType: TextInputType.number,
       style: style,
@@ -134,16 +152,19 @@ class _RequestPageState extends State<RequestPage> {
 
           if (_formKey.currentState.validate()) {
             Firestore.instance
-                .collection("request")
+                .collection("mechanic_request")
                 .document(widget.documentID)
                 .setData({
+              "name":_name.text,
               "Vehicle_Type": dropdownValue,
               "Current_Phone": _currentPhone.text,
               "Trouble": _trouble.text,
               "vehicle_Number": _vehicleNumber.text,
               "complete": false,
-              "customer": widget.userDoc
-            }).then((_) {
+              "state": false,
+              "customer": widget.userDoc,
+              "machenic": widget.documentID
+            }).then((doc) {
               setState(() {
                 _isSigningIn = false;
               });
@@ -151,8 +172,7 @@ class _RequestPageState extends State<RequestPage> {
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                          MechanicDetailsPage(documentID: widget.documentID)));
+                      builder: (context) => WaitingRequest(widget.documentID)));
             }).catchError((err) {
               setState(() {
                 _isSigningIn = false;
@@ -215,6 +235,10 @@ class _RequestPageState extends State<RequestPage> {
                       fit: BoxFit.contain,
                     ),
                     SizedBox(height: 8.0),
+                    cname,
+                    SizedBox(
+                      height: 10.0,
+                    ),
                     vehicleType,
                     SizedBox(
                       height: 10.0,
@@ -236,6 +260,7 @@ class _RequestPageState extends State<RequestPage> {
                       height: 20.00,
                     ),
                     canselButon,
+
                   ],
                 ),
               ),

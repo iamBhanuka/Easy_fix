@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 // import 'package:stripe_payment/stripe_payment.dart';
 
 class PaymentPage extends StatefulWidget {
@@ -19,6 +20,16 @@ class _PaymentPageState extends State<PaymentPage> {
     //     androidPayMode: "test"));
   }
 
+  _launchURL() async {
+  const url = 'https://sandbox.payhere.lk/pay/oa2605079';
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
+
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -33,7 +44,7 @@ class _PaymentPageState extends State<PaymentPage> {
         child: FlatButton(
           child: Text("Add Card"),
           onPressed: () {
-            
+            _launchURL();
           },
         ),
       ),
