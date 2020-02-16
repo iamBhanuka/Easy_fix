@@ -100,8 +100,8 @@ class LoginPageState extends State<LoginPage> {
               if (userDoc.documents.first.data['userType'] != "Customer") {
                 Alert(
                   context: context,
-                  title: "Your are not !",
-                  desc: "A user already exist for this phone number!",
+                  title: "Your are not Customer !",
+                  desc: "Please Create a EasyFix Customer Account !",
                   type: AlertType.error,
                 ).show();
                 setState(() {
@@ -127,16 +127,16 @@ class LoginPageState extends State<LoginPage> {
                   }).catchError((error) {
                     Alert(
                       context: context,
-                      title: "Yoursanmdbakjbfhabd are not !",
-                      desc: "A user already exist for this phone number!",
+                      title: "Invalid",
+                      desc: "Your Password And Email Didn't Match!",
                       type: AlertType.error,
                     ).show();
                   });
                 } else {
                   Alert(
                       context: context,
-                      title: "Your are not !",
-                      desc: "A user already exist for this phone number!",
+                      title: "Empty Email and Password!",
+                      desc: "Fill the Email and Password Field!",
                       type: AlertType.error,
                     );
                   
@@ -146,7 +146,7 @@ class LoginPageState extends State<LoginPage> {
               Alert(
                 context: context,
                 title: "You are not registered!",
-                desc: "A user already exist for this email address!",
+                desc: "Please Register as EasyFix Customer!",
                 type: AlertType.error,
               ).show();
               setState(() {
@@ -198,7 +198,11 @@ class LoginPageState extends State<LoginPage> {
             child: ListView(children: <Widget>[
               Column(
                 children: <Widget>[
-                  _isSigningIn ? LinearProgressIndicator() : SizedBox.shrink(),
+                  _isSigningIn ? CircularProgressIndicator(
+                     backgroundColor: Colors.cyan,
+                  strokeWidth: 8,
+                  ) : SizedBox.shrink(),
+                  SizedBox(height: 10.0,),
                   Image.asset(
                     "assets/logo.jpg",
                     fit: BoxFit.contain,

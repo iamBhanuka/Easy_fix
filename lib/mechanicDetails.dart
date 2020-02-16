@@ -9,7 +9,8 @@ import 'package:easy_fix/payment.dart';
 
 class MechanicDetailsPage extends StatefulWidget {
   String documentID;
-  MechanicDetailsPage({this.documentID});
+  String userId;
+  MechanicDetailsPage({this.documentID,this.userId});
   @override
   _MechanicDetailsPageState createState() => _MechanicDetailsPageState();
 }
@@ -200,7 +201,7 @@ class _MechanicDetailsPageState extends State<MechanicDetailsPage> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (BuildContext context) =>
-                                              MapPage(documentID: widget.documentID)));
+                                              MapPage(documentID: widget.documentID,)));
 
                                 },
                                 elevation: 4.0,
@@ -214,12 +215,12 @@ class _MechanicDetailsPageState extends State<MechanicDetailsPage> {
                               RaisedButton(
                                 color: Color(0xff476cfb),
                                 onPressed: () {
-                                  Navigator.pop(context);
                                   Navigator.push(
+                                    
                                       context,
                                       MaterialPageRoute(
                                           builder: (BuildContext context) =>
-                                              PaymentPage(documentID: widget.documentID)));
+                                              PaymentPage(documentID: widget.documentID,userId: widget.userId,)));
                                 },
                                 elevation: 4.0,
                                 splashColor: Colors.blueGrey,
@@ -237,7 +238,7 @@ class _MechanicDetailsPageState extends State<MechanicDetailsPage> {
                                       MaterialPageRoute(
                                           builder: (BuildContext context) =>
                                                CanselMechanicPage(
-                                                documentID: widget.documentID,
+                                                documentID: widget.documentID,userId: widget.userId,
                                               )));
                                 },
                                 elevation: 4.0,
@@ -256,7 +257,7 @@ class _MechanicDetailsPageState extends State<MechanicDetailsPage> {
                                       MaterialPageRoute(
                                           builder: (BuildContext context) =>
                                               RatePage(
-                                                documentID: widget.documentID,
+                                                documentID: widget.documentID,userId: widget.userId,
                                               )));
                                 },
                                 elevation: 4.0,

@@ -33,7 +33,7 @@ class _YourProfilePageState extends State<YourProfilePage> {
 
     Future uploadPic(BuildContext context)async{
       String fileName = basename(_image.path);
-      StorageReference fireebaseStorageRef = FirebaseStorage.instance.ref().child(fileName);
+      StorageReference fireebaseStorageRef = FirebaseStorage.instance.ref().child("/profilepics/$fileName");
       StorageUploadTask uploadTask = fireebaseStorageRef.putFile(_image);
 
       uploadTask.events.listen((event) {

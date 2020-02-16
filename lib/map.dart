@@ -19,7 +19,8 @@ class PointObject {
 
 class MapPage extends StatefulWidget {
   String documentID;
-  MapPage({this.documentID});
+  String userId;
+  MapPage({this.documentID,this.userId});
   @override
   State createState() => _MapPageState();
 }
@@ -148,7 +149,7 @@ class _MapPageState extends State<MapPage> {
     Logger().i("Doc ID", widget.documentID);
 
     Firestore.instance
-        .collection('mechanic')
+        .collection('users')
         .document(widget.documentID)
         .get()
         .then((documentSnapshot) async {

@@ -5,7 +5,8 @@ import 'canseldetails.dart';
 
 class CanselMechanicPage extends StatefulWidget {
   String documentID;
-  CanselMechanicPage({this.documentID});
+  String userId;
+  CanselMechanicPage({this.documentID,this.userId});
 
   final String title = "Why Are You Cansel The Mechanic";
 
@@ -96,7 +97,7 @@ class CanselMechanicPageState extends State<CanselMechanicPage> {
           }).then((_) {
             setState(() {});
             Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (context) => HomePage()));
+                context, MaterialPageRoute(builder: (context) => HomePage(userDoc: widget.userId,)));
           }).catchError((err) {
             setState(() {
               _isSigningIn = false;

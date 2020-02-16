@@ -326,7 +326,7 @@ class _HomePageState extends State<HomePage> {
 
     var mapicon = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(size: Size(15, 15), devicePixelRatio: 0.7),
-        "assets/customer.png");
+        "assets/fual.png");
 
     setState(() {
       allMarkers.addAll(

@@ -161,7 +161,7 @@ class _RequestPageState extends State<RequestPage> {
               "Trouble": _trouble.text,
               "vehicle_Number": _vehicleNumber.text,
               "complete": false,
-              "state": false,
+              "state": 0,
               "customer": widget.userDoc,
               "machenic": widget.documentID
             }).then((doc) {
@@ -172,7 +172,7 @@ class _RequestPageState extends State<RequestPage> {
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => WaitingRequest(widget.documentID)));
+                      builder: (context) => WaitingRequest(widget.documentID,widget.userDoc)));
             }).catchError((err) {
               setState(() {
                 _isSigningIn = false;
@@ -204,7 +204,7 @@ class _RequestPageState extends State<RequestPage> {
         onPressed: () {
           Navigator.pop(context);
           Navigator.push(context,
-              MaterialPageRoute(builder: (BuildContext context) => HomePage()));
+              MaterialPageRoute(builder: (BuildContext context) => HomePage(userDoc: widget.userDoc,)));
         },
         child: Text(
           "Cansel",

@@ -6,7 +6,8 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 
 class RatePage extends StatefulWidget {
   String documentID;
-  RatePage({this.documentID});
+  String userId;
+  RatePage({this.documentID,this.userId});
   @override
   _RatePageState createState() => _RatePageState();
 }
@@ -155,7 +156,7 @@ class _RatePageState extends State<RatePage> {
                                             MaterialPageRoute(
                                                 builder:
                                                     (BuildContext context) =>
-                                                        HomePage()));
+                                                        HomePage(userDoc: widget.userId,)));
                                       },
                                       color: Color.fromRGBO(0, 179, 134, 1.0),
                                       radius: BorderRadius.circular(0.0),

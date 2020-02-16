@@ -87,7 +87,8 @@ class _VehiclePageState extends State<VehiclePage> {
             padding: const EdgeInsets.fromLTRB(50, 100, 50, 50),
             child: ListView(
               children: <Widget>[
-                _isSigningIn ? LinearProgressIndicator() : SizedBox.shrink(),
+                _isSigningIn ? CircularProgressIndicator( backgroundColor: Colors.cyan,
+                  strokeWidth: 8,) : SizedBox.shrink(),
                 Image.asset(
                   "assets/logo.jpg",
                   fit: BoxFit.contain,

@@ -151,7 +151,8 @@ class _FirstlogPageState extends State<FirstlogPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     _isSigningIn
-                        ? LinearProgressIndicator()
+                        ? CircularProgressIndicator( backgroundColor: Colors.cyan,
+                  strokeWidth: 8,)
                         : SizedBox.shrink(),
                     Image.asset(
                       "assets/logo.jpg",

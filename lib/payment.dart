@@ -4,7 +4,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 class PaymentPage extends StatefulWidget {
   String documentID;
-  PaymentPage({this.documentID});
+  String userId;
+  PaymentPage({this.documentID,this.userId});
   @override
   _PaymentPageState createState() => _PaymentPageState();
 }

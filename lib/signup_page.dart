@@ -294,7 +294,8 @@ class _SignupPageState extends State<SignupPage> {
                 Column(
                   children: <Widget>[
                     _isSigningIn
-                        ? LinearProgressIndicator()
+                        ? CircularProgressIndicator( backgroundColor: Colors.cyan,
+                  strokeWidth: 8,)
                         : SizedBox.shrink(),
                     Image.asset(
                       "assets/logo.jpg",
