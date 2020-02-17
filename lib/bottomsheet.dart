@@ -63,14 +63,18 @@ class _BottomsheetPageState extends State<BottomsheetPage> {
                     height: 15,
                   ),
                   Text(
-                    data['mechanic_name'],
+                    data['Name'],
                     style: TextStyle(fontSize: 20.0),
                   ),
                   SizedBox(
                     height: 15,
                   ),
                   Text(
-                    data['specification'],
+                    data['vehicleType'].reduce((t,v){
+                      t = "${t} ";
+                      t += v;
+                      return t;
+                    }),
                     style: TextStyle(fontSize: 20.0),
                   ),
                   Text(

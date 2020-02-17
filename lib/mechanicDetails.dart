@@ -63,7 +63,7 @@ class _MechanicDetailsPageState extends State<MechanicDetailsPage> {
                       return Column(
                         children: <Widget>[
                           ClipOval(
-                              child: doc.data["Photo"] == null
+                              child: doc.data["profileImage"] == null
                                   ? ClipOval(
                                       child: Image.asset(
                                       'assets/aaa.png',
@@ -71,13 +71,13 @@ class _MechanicDetailsPageState extends State<MechanicDetailsPage> {
                                       height: 100,
                                     ))
                                   : Image.network(
-                                      doc.data["Photo"],
+                                      doc.data["profileImage"],
                                       width: 100,
                                       height: 100,
                                       fit: BoxFit.cover,
                                     )),
                           Text(
-                            doc.data["mechanic_name"],
+                            doc.data["Name"],
                             style:
                                 TextStyle(color: Colors.black, fontSize: 25.0),
                           )
@@ -131,7 +131,7 @@ class _MechanicDetailsPageState extends State<MechanicDetailsPage> {
                               Container(
                                 margin: EdgeInsets.only(left: 8.0),
                                 child: Text(
-                                  data['specification'],
+                                  data['vehicleType'].toString(),
                                   style: TextStyle(fontSize: 20.0),
                                 ),
                               )
@@ -154,7 +154,7 @@ class _MechanicDetailsPageState extends State<MechanicDetailsPage> {
                                 margin: EdgeInsets.only(left: 8.0),
                                 child: InkWell(
                                   child: Text(
-                                    data['telephone'],
+                                    data['number'],
                                     style: TextStyle(fontSize: 20.0),
                                   ),
                                   onTap: () async {
@@ -171,14 +171,14 @@ class _MechanicDetailsPageState extends State<MechanicDetailsPage> {
                           child: Row(
                             children: <Widget>[
                               Text(
-                                'Address :-',
+                                'Email :-',
                                 style: TextStyle(
                                     color: Colors.black, fontSize: 25.0),
                               ),
                               Container(
                                 margin: EdgeInsets.only(left: 8.0),
                                 child: Text(
-                                  data['address'],
+                                  data['email'],
                                   style: TextStyle(fontSize: 20.0),
                                 ),
                               )

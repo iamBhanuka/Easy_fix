@@ -97,7 +97,7 @@ class LoginPageState extends State<LoginPage> {
             //         email: _email, password: _password)) as FirebaseUser;
 
             if (userDoc.documents.length > 0) {
-              if (userDoc.documents.first.data['userType'] != "Customer") {
+              if (userDoc.documents.first.data['usertype'] != "Customer") {
                 Alert(
                   context: context,
                   title: "Your are not Customer !",

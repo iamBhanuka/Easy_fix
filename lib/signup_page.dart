@@ -20,7 +20,6 @@ class _SignupPageState extends State<SignupPage> {
   var _formKey = GlobalKey<FormState>();
 
   TextEditingController _firstName = TextEditingController();
-  TextEditingController _lastName = TextEditingController();
   TextEditingController _idfield = TextEditingController();
   TextEditingController _email = TextEditingController();
   TextEditingController _password = TextEditingController();
@@ -37,49 +36,33 @@ class _SignupPageState extends State<SignupPage> {
       style: style,
       validator: (value) {
         if (value.isEmpty) {
-          return "First Name Can't be Empty";
+          return "Name Can't be Empty";
         }
         return null;
       },
       controller: _firstName,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hintText: "First Name",
+          hintText: "Your Name",
           border:
               OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
 
-    final lName = TextFormField(
-      keyboardType: TextInputType.text,
-      obscureText: false,
-      style: style,
-      validator: (value) {
-        if (value.isEmpty) {
-          return "Last Name Can't be Empty";
-        }
-        return null;
-      },
-      controller: _lastName,
-      decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hintText: "Last Name",
-          border:
-              OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
-    );
+   
 
     final idField = TextFormField(
       keyboardType: TextInputType.text,
       style: style,
       validator: (value) {
         if (value.isEmpty) {
-          return "ID Can't be Empty";
+          return "Nic Can't be Empty";
         }
         return null;
       },
       controller: _idfield,
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hintText: "ID",
+          hintText: "NIC",
           border:
               OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
@@ -227,12 +210,11 @@ class _SignupPageState extends State<SignupPage> {
                       .collection("users")
                       .document(user.uid)
                       .setData({
-                    "First Name": _firstName.text,
-                    "Last Name": _lastName.text,
-                    "id": _idfield.text,
+                    "Name": _firstName.text,
+                    "nic": _idfield.text,
                     "email": _email.text,
-                    "userType": "Customer",
-                    "phoneNumber": widget.userDoc
+                    "usertype": "Customer",
+                    "number": widget.userDoc
                   }).then((_) async {
                     setState(() {
                       _isSigningIn = false;
@@ -258,8 +240,8 @@ class _SignupPageState extends State<SignupPage> {
             } else {
               Alert(
                 context: context,
-                title: "ID Length is invalied",
-                desc: "Check your ID card numbers !!",
+                title: "NIC Length is invalied",
+                desc: "Check your NIC card numbers !!",
                 type: AlertType.error,
               ).show();
               setState(() {
@@ -303,10 +285,6 @@ class _SignupPageState extends State<SignupPage> {
                     ),
                     SizedBox(height: 15.0),
                     fname,
-                    SizedBox(
-                      height: 15.0,
-                    ),
-                    lName,
                     SizedBox(
                       height: 15.0,
                     ),

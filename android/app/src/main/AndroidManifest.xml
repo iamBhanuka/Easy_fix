@@ -13,7 +13,7 @@
         android:label="easy_fix"
         android:icon="@mipmap/ic_launcher">
         <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="AIzaSyASdScPl7E8E3uuU-uxs4fIwTyfwggw5eo"/>
+        android:value="AIzaSyASdScPl7E8E3uuU-uxs4fIwTyfwggw5eo"/>
 
         <activity
             android:name=".MainActivity"

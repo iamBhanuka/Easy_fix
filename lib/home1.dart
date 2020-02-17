@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:dio/dio.dart';
+import 'package:easy_fix/change_password.dart';
 import 'package:easy_fix/logfirst.dart';
 import 'package:easy_fix/providers/user_provider.dart';
 import 'package:easy_fix/yourprofile.dart';
@@ -10,6 +11,7 @@ import 'package:easy_fix/help.dart';
 import 'package:easy_fix/payment.dart';
 import 'package:easy_fix/setting.dart';
 import 'package:easy_fix/yourworks.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -114,7 +116,7 @@ class _HomePageState extends State<HomePage> {
   void addMarkers() {
     Firestore.instance
         .collection('users')
-        .where("userType", isEqualTo: "mechanic")
+        .where("usertype", isEqualTo: "mechanic")
         .getDocuments()
         .then((snapshots) {
       var machanicLocationIcon = snapshots.documents
@@ -204,7 +206,7 @@ class _HomePageState extends State<HomePage> {
                       return Column(
                         children: <Widget>[
                           ClipOval(
-                              child: doc.data["Photo"] == null
+                              child: doc.data["profileImage"] == null
                                   ? ClipOval(
                                       child: Image.asset(
                                       'assets/aaa.png',
@@ -212,13 +214,13 @@ class _HomePageState extends State<HomePage> {
                                       height: 100,
                                     ))
                                   : Image.network(
-                                      doc.data["Photo"],
+                                      doc.data["profileImage"],
                                       width: 100,
                                       height: 100,
                                       fit: BoxFit.cover,
                                     )),
                           Text(
-                            doc.data["First Name"],
+                            doc.data["Name"],
                             style:
                                 TextStyle(color: Colors.white, fontSize: 25.0),
                           )
@@ -281,6 +283,13 @@ class _HomePageState extends State<HomePage> {
                   context,
                   MaterialPageRoute(
                       builder: (BuildContext context) => SettingPage(userDoc: widget.userDoc,)));
+            }),
+            CoustomListTile(FontAwesomeIcons.eyeSlash, "Change Password", () {
+              Navigator.pop(context);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => ChangePasswordScreen()));
             }),
             CoustomListTile(Icons.help, "Help", () {
               Navigator.pop(context);

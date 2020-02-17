@@ -87,7 +87,7 @@ class _FirstlogPageState extends State<FirstlogPage> {
           }
           var userDoc = await Firestore.instance
               .collection("users")
-              .where("phoneNumber", isEqualTo: _phoneNumber.text)
+              .where("number", isEqualTo: _phoneNumber.text)
               .getDocuments();
 
           if (userDoc.documents.length > 0) {
